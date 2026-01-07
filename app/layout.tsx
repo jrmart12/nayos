@@ -1,0 +1,177 @@
+import type { Metadata } from "next";
+import { Inter, Oswald, Caveat } from "next/font/google";
+import "./globals.css";
+import { CartProvider } from "@/contexts/CartContext";
+import CartButton from "@/components/CartButton";
+import CartModal from "@/components/CartModal";
+import { client } from "@/lib/sanity";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const oswald = Oswald({
+  subsets: ["latin"],
+  variable: "--font-oswald",
+});
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  variable: "--font-caveat",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://nayosburgers.com'),
+  title: {
+    default: "Nayos | Las Mejores Hamburguesas de La Ceiba",
+    template: "%s | Nayos Burgers"
+  },
+  description: "Las mejores hamburguesas artesanales de La Ceiba, Honduras. Ingredientes frescos, sabor inigualable. ¡Pide a domicilio!",
+  keywords: ["Nayos", "Hamburguesas", "Burgers", "La Ceiba", "Honduras", "Comida a Domicilio", "Restaurante"],
+  authors: [{ name: "Nayos" }],
+  alternates: {
+    canonical: 'https://nayosburgers.com',
+  },
+  openGraph: {
+    title: "Nayos | Las Mejores Hamburguesas de La Ceiba",
+    description: "Hamburguesas artesanales con ingredientes frescos. ¡Pide a domicilio!",
+    siteName: "Nayos Burgers",
+    images: [{ url: "/nayos-logo.jpg", width: 800, height: 600, alt: "Nayos Logo" }],
+    locale: "es_HN",
+    type: "website",
+    url: 'https://nayosburgers.com',
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nayos Burgers",
+    description: "Las mejores hamburguesas de La Ceiba.",
+    images: ["/nayos-logo.jpg"],
+  },
+  applicationName: 'Nayos',
+  appleWebApp: {
+    capable: true,
+    title: 'Nayos',
+    statusBarStyle: 'default',
+  },
+  manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48', type: 'image/png' },
+      { url: '/icon-48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/icon-96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    shortcut: '/icon-48.png',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
+
+async function getSiteSettings() {
+  return await client.fetch('*[_type == "siteSettings"][0]');
+}
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const settings = await getSiteSettings();
+
+  return (
+    <html lang="es">
+      <body
+        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased bg-background text-foreground`}
+      >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Nayos Burgers",
+              url: "https://nayosburgers.com",
+              logo: "https://nayosburgers.com/nayos-logo.jpg",
+              image: "https://nayosburgers.com/nayos-logo.jpg",
+              sameAs: [
+                "https://www.facebook.com/nayosburgers",
+                "https://www.instagram.com/nayosburgers"
+              ]
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Restaurant",
+              name: "Nayos Burgers",
+              image: "https://nayosburgers.com/nayos-logo.jpg",
+              logo: "https://nayosburgers.com/nayos-logo.jpg",
+              "@id": "https://nayosburgers.com",
+              url: "https://nayosburgers.com",
+              telephone: "+50495082348",
+              servesCuisine: "American, Burgers",
+              priceRange: "$$",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "Barrio La Isla",
+                addressLocality: "La Ceiba",
+                addressRegion: "Atlantida",
+                postalCode: "31101",
+                addressCountry: "HN",
+              },
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: 15.783471,
+                longitude: -86.795244,
+              },
+              openingHoursSpecification: {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday",
+                ],
+                opens: "11:00",
+                closes: "21:30",
+              },
+              menu: "https://nayosburgers.com/menu",
+              sameAs: [
+                "https://www.facebook.com/nayosburgers",
+                "https://www.instagram.com/nayosburgers"
+              ]
+            }),
+          }}
+        />
+
+        <CartProvider>
+          {children}
+          <CartButton />
+          <CartModal settings={settings} />
+        </CartProvider>
+      </body>
+    </html>
+  );
+}

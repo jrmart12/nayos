@@ -1,0 +1,62 @@
+import { client, PRODUCTS_QUERY, SITE_SETTINGS_QUERY } from '@/lib/sanity'
+import { Metadata } from 'next'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import MenuProducts from '@/components/MenuProducts'
+
+export const revalidate = 60
+
+export const metadata: Metadata = {
+    title: "Menú",
+    description: "Explora nuestro delicioso menú de hamburguesas artesanales. ¡Pide a domicilio en La Ceiba!",
+    alternates: {
+        canonical: '/menu',
+    },
+    openGraph: {
+        title: "Menú | Nayos Burgers",
+        description: "Las mejores hamburguesas artesanales de La Ceiba. ¡Pide a domicilio!",
+        images: [{ url: "/nayos_logo.jpg", width: 800, height: 600, alt: "Nayos Menu" }],
+    },
+}
+
+export default async function ProductsPage() {
+    const [products, settings] = await Promise.all([
+        client.fetch(PRODUCTS_QUERY),
+        client.fetch(SITE_SETTINGS_QUERY),
+    ])
+
+    return (
+        <div className="min-h-screen bg-background">
+            <Navbar settings={settings} />
+            <main className="pt-28 pb-16">
+                {/* Header */}
+                <section className="py-8 sm:py-12">
+                    <div className="container mx-auto px-4">
+                        <div className="text-center max-w-3xl mx-auto">
+                            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-foreground mb-4 uppercase">
+                                Nuestro Menú
+                            </h1>
+                            <p className="text-base sm:text-lg md:text-xl text-muted">
+                                Hamburguesas artesanales preparadas con ingredientes frescos y mucho amor.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Products with Category Tabs */}
+                {products && products.length > 0 ? (
+                    <MenuProducts products={products} />
+                ) : (
+                    <section className="py-20">
+                        <div className="container mx-auto px-4 text-center">
+                            <div className="text-6xl mb-4">🍔</div>
+                            <h2 className="text-2xl font-bold text-foreground mb-2">Menú en Construcción</h2>
+                            <p className="text-muted">Pronto tendremos nuestro menú disponible.</p>
+                        </div>
+                    </section>
+                )}
+            </main>
+            <Footer settings={settings} />
+        </div>
+    )
+}
