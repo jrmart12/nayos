@@ -25,7 +25,7 @@ interface NavbarProps {
 export default function Navbar({ settings }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const { setIsOpen: setCartOpen, totalItems } = useCart();
+    const { setIsOpen: setCartOpen, totalItems, isOpen: isCartOpen } = useCart();
     const pathname = usePathname();
 
     useEffect(() => {
@@ -162,7 +162,7 @@ export default function Navbar({ settings }: NavbarProps) {
                             exit={{ opacity: 0, height: 0 }}
                             className="md:hidden bg-white overflow-hidden border-t border-gray-100"
                         >
-                            <div className="flex flex-col items-center py-8 space-y-6">
+                            <div className="flex flex-col items-center py-8 space-y-6 mt-4">
                                 {navLinks.map((link) => (
                                     <Link
                                         key={link.label}
@@ -190,20 +190,25 @@ export default function Navbar({ settings }: NavbarProps) {
                 href="/"
                 className={cn(
                     "fixed left-1/2 -translate-x-1/2 z-[60] transition-all duration-300",
-                    scrolled ? "top-1" : "top-6"
+                    scrolled ? "top-1" : "top-6",
+                    isCartOpen ? "opacity-0 pointer-events-none translate-y-[-20px]" : "opacity-100 translate-y-0"
                 )}
             >
                 <div className={cn(
                     "bg-white rounded-full shadow-xl border-[3px] border-primary flex items-center justify-center transition-all duration-300",
                     scrolled ? "w-14 h-14" : "w-20 h-20"
                 )}>
-                    <Image
-                        src="/nayos_logo.jpg"
-                        alt="Nayos"
-                        width={scrolled ? 48 : 72}
-                        height={scrolled ? 48 : 72}
-                        className="object-contain rounded-full"
-                    />
+                    <div className="relative w-full h-full p-0.5">
+                        <Image
+                            src="/nayos_logo.jpg"
+                            alt="Nayos"
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            quality={100}
+                            className="object-contain rounded-full"
+                            priority
+                        />
+                    </div>
                 </div>
             </Link>
         </>

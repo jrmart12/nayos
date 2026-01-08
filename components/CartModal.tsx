@@ -142,11 +142,7 @@ export default function CartModal({ settings }: { settings?: any }) {
 
         items.forEach(item => {
             message += `• ${item.name}\n`;
-            if (item.selectedOptions && Object.keys(item.selectedOptions).length > 0) {
-                Object.entries(item.selectedOptions).forEach(([optionName, values]) => {
-                    message += `  ${optionName}: ${values.join(', ')}\n`;
-                });
-            }
+
             if (item.specialInstructions) {
                 message += `  Indicaciones: ${item.specialInstructions}\n`;
             }
@@ -175,21 +171,21 @@ export default function CartModal({ settings }: { settings?: any }) {
 
                     // Include bank account details
                     if (customer.selectedBank === 'BAC') {
-                        message += `*Cuenta BAC:* 727269691\n`;
-                        message += `Titular: JHOEL JONES VELASQUEZ\n`;
-                        message += `ID: 0101199500756\n`;
+                        message += `*Cuenta BAC:* 000000000\n`;
+                        message += `Titular: Nombre de Ejemplo\n`;
+                        message += `ID: 0000000000000\n`;
                     } else if (customer.selectedBank === 'FICOHSA') {
-                        message += `*Cuenta FICOHSA:* 200015920881\n`;
-                        message += `Titular: JHOEL JONES VELASQUEZ\n`;
-                        message += `ID: 0101199500756\n`;
+                        message += `*Cuenta FICOHSA:* 000000000\n`;
+                        message += `Titular: Nombre de Ejemplo\n`;
+                        message += `ID: 0000000000000\n`;
                     } else if (customer.selectedBank === 'BANPAIS') {
-                        message += `*Cuenta BANPAIS:* 216170056146\n`;
-                        message += `Titular: JHOEL JONES VELASQUEZ\n`;
-                        message += `ID: 0101199500756\n`;
+                        message += `*Cuenta BANPAIS:* 000000000\n`;
+                        message += `Titular: Nombre de Ejemplo\n`;
+                        message += `ID: 0000000000000\n`;
                     } else if (customer.selectedBank === 'ATLANTIDA') {
-                        message += `*Cuenta ATLÁNTIDA:* 2020653689\n`;
-                        message += `Titular: JHOEL VELASQUEZ GOUGH\n`;
-                        message += `ID: 0101199500756\n`;
+                        message += `*Cuenta ATLÁNTIDA:* 000000000\n`;
+                        message += `Titular: Nombre de Ejemplo\n`;
+                        message += `ID: 0000000000000\n`;
                     }
                 }
             } else if (customer.paymentMethod === 'bac_compra_click') {
@@ -237,7 +233,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setIsOpen(false)}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
                     />
 
                     {/* Modal */}
@@ -246,21 +242,21 @@ export default function CartModal({ settings }: { settings?: any }) {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed inset-y-0 right-0 w-full md:w-[500px] bg-secondary z-50 shadow-2xl flex flex-col border-l border-white/10"
+                        className="fixed inset-y-0 right-0 w-full md:w-[500px] bg-white z-[100] shadow-2xl flex flex-col border-l border-gray-100"
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-black/20">
+                        <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
                             <div className="flex items-center gap-4">
                                 {currentStep === 'checkout' && (
-                                    <button onClick={goBackToCart} className="text-gray-400 hover:text-white transition-colors">
+                                    <button onClick={goBackToCart} className="text-gray-500 hover:text-black transition-colors">
                                         <ArrowLeft size={24} />
                                     </button>
                                 )}
-                                <h2 className="text-2xl font-black text-white uppercase tracking-wide">
+                                <h2 className="text-2xl font-black text-foreground uppercase tracking-wide">
                                     {currentStep === 'cart' ? 'Tu Carrito' : 'Información de Envío'}
                                 </h2>
                             </div>
-                            <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+                            <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-black transition-colors">
                                 <X size={24} />
                             </button>
                         </div>
@@ -288,7 +284,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                                             <motion.div
                                                 layout
                                                 key={item.id}
-                                                className="bg-black/40 rounded-xl p-4 flex gap-4 border border-white/5"
+                                                className="bg-white rounded-xl p-4 flex gap-4 border border-gray-100 shadow-sm"
                                             >
                                                 <div className="relative w-20 h-20 shrink-0 bg-gray-800 rounded-lg overflow-hidden">
                                                     {item.image && typeof item.image === 'object' && item.image.asset ? (
@@ -306,23 +302,17 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                             className="object-cover"
                                                         />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-gray-600">
+                                                        <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">
                                                             <ShoppingCart size={24} />
                                                         </div>
                                                     )}
                                                 </div>
 
                                                 <div className="flex-1 min-w-0">
-                                                    <h3 className="text-white font-bold text-sm truncate uppercase tracking-wide">{item.name}</h3>
-                                                    {item.selectedOptions && Object.keys(item.selectedOptions).length > 0 && (
-                                                        <div className="text-gray-400 text-xs mt-1">
-                                                            {Object.entries(item.selectedOptions).map(([optionName, values]) => (
-                                                                <div key={optionName}>{optionName}: {values.join(', ')}</div>
-                                                            ))}
-                                                        </div>
-                                                    )}
+                                                    <h3 className="text-foreground font-bold text-sm truncate uppercase tracking-wide">{item.name}</h3>
+
                                                     {item.specialInstructions && (
-                                                        <div className="text-gray-400 text-xs mt-1">
+                                                        <div className="text-gray-500 text-xs mt-1">
                                                             Indicaciones: {item.specialInstructions}
                                                         </div>
                                                     )}
@@ -331,26 +321,26 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                     </p>
 
                                                     <div className="flex items-center gap-3 mt-3">
-                                                        <div className="flex items-center bg-gray-800 rounded-full">
+                                                        <div className="flex items-center bg-gray-100 rounded-full border border-gray-200">
                                                             <button
                                                                 onClick={() => updateQuantity(item.id || item._id || '', item.quantity - 1)}
-                                                                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                                                                className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black transition-colors"
                                                             >
                                                                 <Minus size={14} />
                                                             </button>
-                                                            <span className="text-white font-bold text-sm w-4 text-center">
+                                                            <span className="text-foreground font-bold text-sm w-4 text-center">
                                                                 {item.quantity}
                                                             </span>
                                                             <button
                                                                 onClick={() => updateQuantity(item.id || item._id || '', item.quantity + 1)}
-                                                                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                                                                className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black transition-colors"
                                                             >
                                                                 <Plus size={14} />
                                                             </button>
                                                         </div>
                                                         <button
                                                             onClick={() => removeFromCart(item.id || item._id || '')}
-                                                            className="ml-auto text-gray-500 hover:text-red-500 transition-colors"
+                                                            className="ml-auto text-gray-400 hover:text-red-500 transition-colors"
                                                         >
                                                             <Trash2 size={18} />
                                                         </button>
@@ -378,12 +368,12 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                 }
                                             }}
                                             className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${deliveryMethod === 'delivery'
-                                                ? 'bg-primary text-black border-primary'
-                                                : 'bg-black/40 text-gray-400 border-white/10 hover:bg-white/5'
+                                                ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
+                                                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                                                 }`}
                                         >
                                             <span className="font-bold uppercase">A Domicilio</span>
-                                            <span className="text-xs opacity-75">Envío calculado</span>
+                                            <span className="text-xs opacity-90">Envío calculado</span>
                                         </button>
                                         <button
                                             type="button"
@@ -392,12 +382,12 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                 setDeliveryPrice(0);
                                             }}
                                             className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${deliveryMethod === 'pickup'
-                                                ? 'bg-primary text-black border-primary'
-                                                : 'bg-black/40 text-gray-400 border-white/10 hover:bg-white/5'
+                                                ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
+                                                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                                                 }`}
                                         >
                                             <span className="font-bold uppercase">Pickup</span>
-                                            <span className="text-xs opacity-75">Recoger en restaurante</span>
+                                            <span className="text-xs opacity-90">Recoger en restaurante</span>
                                         </button>
                                     </div>
 
@@ -405,7 +395,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                                         <div>
                                             <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nombre Completo</label>
                                             <input
-                                                className={`w-full bg-black/40 border rounded-lg p-3 text-white focus:outline-none transition-colors ${formErrors.name ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-primary'
+                                                className={`w-full bg-white border rounded-lg p-3 text-foreground focus:outline-none transition-colors ${formErrors.name ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-primary'
                                                     }`}
                                                 placeholder="Nombre completo *"
                                                 value={customer?.name || ''}
@@ -417,7 +407,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                                         <div>
                                             <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Teléfono</label>
                                             <input
-                                                className={`w-full bg-black/40 border rounded-lg p-3 text-white focus:outline-none transition-colors ${formErrors.phone ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-primary'
+                                                className={`w-full bg-white border rounded-lg p-3 text-foreground focus:outline-none transition-colors ${formErrors.phone ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-primary'
                                                     }`}
                                                 placeholder="Teléfono *"
                                                 value={customer?.phone || ''}
@@ -434,7 +424,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                     <div className="relative mb-3">
                                                         <input
                                                             readOnly
-                                                            className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white/70 cursor-not-allowed"
+                                                            className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-500 cursor-not-allowed"
                                                             value={customer.address}
                                                         />
                                                     </div>
@@ -464,10 +454,10 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                     }}
                                                 />
                                                 {deliveryPrice > 0 && (
-                                                    <div className="mt-2 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                                                        <p className="text-blue-400 text-sm flex justify-between">
+                                                    <div className="mt-2 p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                                                        <p className="text-blue-600 text-sm flex justify-between">
                                                             <span>Costo de envío estimado:</span>
-                                                            <span className="font-bold text-white">{formatPrice(deliveryPrice)}</span>
+                                                            <span className="font-bold text-foreground">{formatPrice(deliveryPrice)}</span>
                                                         </p>
                                                     </div>
                                                 )}
@@ -482,8 +472,8 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                     type="button"
                                                     onClick={() => onCustomerChange('paymentMethod', 'cash')}
                                                     className={`p-3 rounded-lg border flex flex-col items-center gap-1 transition-all text-sm ${customer?.paymentMethod === 'cash'
-                                                        ? 'bg-primary text-black border-primary'
-                                                        : 'bg-black/40 text-gray-400 border-white/10 hover:bg-white/5'
+                                                        ? 'bg-primary text-white border-primary shadow-md'
+                                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
                                                         }`}
                                                 >
                                                     <span className="font-bold text-xs">Efectivo</span>
@@ -492,8 +482,8 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                     type="button"
                                                     onClick={() => onCustomerChange('paymentMethod', 'transfer')}
                                                     className={`p-3 rounded-lg border flex flex-col items-center gap-1 transition-all text-sm ${customer?.paymentMethod === 'transfer'
-                                                        ? 'bg-primary text-black border-primary'
-                                                        : 'bg-black/40 text-gray-400 border-white/10 hover:bg-white/5'
+                                                        ? 'bg-primary text-white border-primary shadow-md'
+                                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
                                                         }`}
                                                 >
                                                     <span className="font-bold text-xs">Transferencia</span>
@@ -502,8 +492,8 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                     type="button"
                                                     onClick={() => onCustomerChange('paymentMethod', 'bac_compra_click')}
                                                     className={`p-3 rounded-lg border flex flex-col items-center gap-1 transition-all text-sm ${customer?.paymentMethod === 'bac_compra_click'
-                                                        ? 'bg-primary text-black border-primary'
-                                                        : 'bg-black/40 text-gray-400 border-white/10 hover:bg-white/5'
+                                                        ? 'bg-primary text-white border-primary shadow-md'
+                                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
                                                         }`}
                                                 >
                                                     <span className="font-bold text-xs">Tarjetas</span>
@@ -514,10 +504,10 @@ export default function CartModal({ settings }: { settings?: any }) {
                                             {/* Cash - Ask for change */}
                                             {customer?.paymentMethod === 'cash' && (
                                                 <div className="mt-3">
-                                                    <label className="block text-xs font-bold text-gray-400 mb-2">¿Necesita cambio? ¿De cuánto?</label>
+                                                    <label className="block text-xs font-bold text-gray-500 mb-2">¿Necesita cambio? ¿De cuánto?</label>
                                                     <input
                                                         type="text"
-                                                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-primary transition-colors"
+                                                        className="w-full bg-white border border-gray-200 rounded-lg p-3 text-foreground focus:outline-none focus:border-primary transition-colors"
                                                         placeholder="Ej: Sí, de L. 500"
                                                         value={customer?.cashChange || ''}
                                                         onChange={(e) => onCustomerChange('cashChange', e.target.value)}
@@ -537,8 +527,8 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                                     type="button"
                                                                     onClick={() => onCustomerChange('selectedBank', bank)}
                                                                     className={`p-2 rounded-lg border text-sm transition-all ${customer?.selectedBank === bank
-                                                                        ? 'bg-blue-600 text-white border-blue-600'
-                                                                        : 'bg-black/40 text-gray-400 border-white/10 hover:bg-white/5'
+                                                                        ? 'bg-primary text-white border-primary shadow-md'
+                                                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
                                                                         }`}
                                                                 >
                                                                     {bank}
@@ -549,91 +539,91 @@ export default function CartModal({ settings }: { settings?: any }) {
 
                                                     {/* Bank account info */}
                                                     {customer?.selectedBank && (
-                                                        <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg text-sm">
-                                                            <p className="text-blue-400 font-bold mb-2">Datos de {customer.selectedBank}:</p>
+                                                        <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm">
+                                                            <p className="text-gray-900 font-bold mb-2">Datos de {customer.selectedBank}:</p>
                                                             {customer.selectedBank === 'BAC' && (
                                                                 <>
                                                                     <div className="flex items-center justify-between mb-1">
-                                                                        <p className="text-white flex-1">Cuenta: <span className="font-mono">727269691</span></p>
+                                                                        <p className="text-gray-700 flex-1">Cuenta: <span className="font-mono font-bold">000000000</span></p>
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => {
-                                                                                navigator.clipboard.writeText('727269691');
+                                                                                navigator.clipboard.writeText('000000000');
                                                                                 setCopiedAccount('BAC');
                                                                                 setTimeout(() => setCopiedAccount(null), 2000);
                                                                             }}
-                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'BAC' ? 'bg-green-600 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'BAC' ? 'bg-green-600 text-white' : 'bg-primary hover:bg-primary/80 text-white'}`}
                                                                         >
                                                                             {copiedAccount === 'BAC' ? '¡Copiado!' : 'Copiar'}
                                                                         </button>
                                                                     </div>
-                                                                    <p className="text-white">Titular: JHOEL JONES VELASQUEZ</p>
-                                                                    <p className="text-gray-400 text-xs">ID: 0101199500756</p>
+                                                                    <p className="text-gray-700">Titular: Nombre de Ejemplo</p>
+                                                                    <p className="text-gray-500 text-xs">ID: 0000000000000</p>
                                                                 </>
                                                             )}
                                                             {customer.selectedBank === 'FICOHSA' && (
                                                                 <>
                                                                     <div className="flex items-center justify-between mb-1">
-                                                                        <p className="text-white flex-1">Cuenta: <span className="font-mono">200015920881</span></p>
+                                                                        <p className="text-gray-700 flex-1">Cuenta: <span className="font-mono font-bold">000000000</span></p>
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => {
-                                                                                navigator.clipboard.writeText('200015920881');
+                                                                                navigator.clipboard.writeText('000000000');
                                                                                 setCopiedAccount('FICOHSA');
                                                                                 setTimeout(() => setCopiedAccount(null), 2000);
                                                                             }}
-                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'FICOHSA' ? 'bg-green-600 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'FICOHSA' ? 'bg-green-600 text-white' : 'bg-primary hover:bg-primary/80 text-white'}`}
                                                                         >
                                                                             {copiedAccount === 'FICOHSA' ? '¡Copiado!' : 'Copiar'}
                                                                         </button>
                                                                     </div>
-                                                                    <p className="text-white">Titular: JHOEL JONES VELASQUEZ</p>
-                                                                    <p className="text-gray-400 text-xs">ID: 0101199500756</p>
+                                                                    <p className="text-gray-700">Titular: Nombre de Ejemplo</p>
+                                                                    <p className="text-gray-500 text-xs">ID: 0000000000000</p>
                                                                 </>
                                                             )}
                                                             {customer.selectedBank === 'BANPAIS' && (
                                                                 <>
                                                                     <div className="flex items-center justify-between mb-1">
-                                                                        <p className="text-white flex-1">Cuenta: <span className="font-mono">216170056146</span></p>
+                                                                        <p className="text-gray-700 flex-1">Cuenta: <span className="font-mono font-bold">000000000</span></p>
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => {
-                                                                                navigator.clipboard.writeText('216170056146');
+                                                                                navigator.clipboard.writeText('000000000');
                                                                                 setCopiedAccount('BANPAIS');
                                                                                 setTimeout(() => setCopiedAccount(null), 2000);
                                                                             }}
-                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'BANPAIS' ? 'bg-green-600 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'BANPAIS' ? 'bg-green-600 text-white' : 'bg-primary hover:bg-primary/80 text-white'}`}
                                                                         >
                                                                             {copiedAccount === 'BANPAIS' ? '¡Copiado!' : 'Copiar'}
                                                                         </button>
                                                                     </div>
-                                                                    <p className="text-white">Titular: JHOEL JONES VELASQUEZ</p>
-                                                                    <p className="text-gray-400 text-xs">ID: 0101199500756</p>
+                                                                    <p className="text-gray-700">Titular: Nombre de Ejemplo</p>
+                                                                    <p className="text-gray-500 text-xs">ID: 0000000000000</p>
                                                                 </>
                                                             )}
                                                             {customer.selectedBank === 'ATLANTIDA' && (
                                                                 <>
                                                                     <div className="flex items-center justify-between mb-1">
-                                                                        <p className="text-white flex-1">Cuenta: <span className="font-mono">2020653689</span></p>
+                                                                        <p className="text-gray-700 flex-1">Cuenta: <span className="font-mono font-bold">000000000</span></p>
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => {
-                                                                                navigator.clipboard.writeText('2020653689');
+                                                                                navigator.clipboard.writeText('000000000');
                                                                                 setCopiedAccount('ATLANTIDA');
                                                                                 setTimeout(() => setCopiedAccount(null), 2000);
                                                                             }}
-                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'ATLANTIDA' ? 'bg-green-600 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'ATLANTIDA' ? 'bg-green-600 text-white' : 'bg-primary hover:bg-primary/80 text-white'}`}
                                                                         >
                                                                             {copiedAccount === 'ATLANTIDA' ? '¡Copiado!' : 'Copiar'}
                                                                         </button>
                                                                     </div>
-                                                                    <p className="text-white">Titular: JHOEL VELASQUEZ GOUGH</p>
-                                                                    <p className="text-gray-400 text-xs">ID: 0101199500756</p>
+                                                                    <p className="text-gray-700">Titular: Nombre de Ejemplo</p>
+                                                                    <p className="text-gray-500 text-xs">ID: 0000000000000</p>
                                                                 </>
                                                             )}
 
-                                                            <div className="mt-4 pt-4 border-t border-blue-500/20">
-                                                                <label className="block text-xs font-bold text-white mb-2 uppercase">
+                                                            <div className="mt-4 pt-4 border-t border-gray-200">
+                                                                <label className="block text-xs font-bold text-gray-700 mb-2 uppercase">
                                                                     Comprobante de Transferencia *
                                                                 </label>
                                                                 <input
@@ -676,12 +666,12 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                                     onClick={() => fileInputRef.current?.click()}
                                                                     disabled={isUploading}
                                                                     className={`w-full p-3 rounded-lg border border-dashed flex items-center justify-center gap-2 transition-all ${isUploading
-                                                                        ? 'bg-gray-500/20 border-gray-500 text-gray-400 cursor-wait'
+                                                                        ? 'bg-gray-100 border-gray-300 text-gray-500 cursor-wait'
                                                                         : uploadedImageUrl
-                                                                            ? 'bg-green-500/20 border-green-500 text-green-400'
+                                                                            ? 'bg-green-50 border-green-500 text-green-600'
                                                                             : formErrors.transferImage
-                                                                                ? 'bg-red-500/10 border-red-500 text-red-400'
-                                                                                : 'bg-black/20 border-white/20 text-gray-400 hover:bg-white/5 hover:border-white/40'
+                                                                                ? 'bg-red-50 border-red-500 text-red-500'
+                                                                                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hover:border-primary'
                                                                         }`}
                                                                 >
                                                                     {isUploading ? (
@@ -715,12 +705,12 @@ export default function CartModal({ settings }: { settings?: any }) {
 
                                             {/* Tarjetas (BAC Compra Click) - Info message */}
                                             {customer?.paymentMethod === 'bac_compra_click' && (
-                                                <div className="mt-3 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                                                    <p className="text-blue-400 font-bold mb-2">Pago con Tarjeta</p>
-                                                    <p className="text-white text-sm">
+                                                <div className="mt-3 p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                                                    <p className="text-blue-600 font-bold mb-2">Pago con Tarjeta</p>
+                                                    <p className="text-gray-700 text-sm">
                                                         Al enviar tu pedido por WhatsApp, te generaremos un link de pago seguro para completar tu compra.
                                                     </p>
-                                                    <p className="text-gray-400 text-xs mt-2">
+                                                    <p className="text-gray-500 text-xs mt-2">
                                                         Podrás pagar con cualquier tarjeta de crédito o débito.
                                                     </p>
                                                 </div>
@@ -731,7 +721,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                                         <div>
                                             <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Notas (Opcional)</label>
                                             <textarea
-                                                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-primary transition-colors min-h-[100px]"
+                                                className="w-full bg-white border border-gray-200 rounded-lg p-3 text-foreground focus:outline-none focus:border-primary transition-colors min-h-[100px]"
                                                 placeholder="Cualquier indicación especial para tu pedido"
                                                 value={customer?.notes || ''}
                                                 onChange={(e) => onCustomerChange('notes', e.target.value)}
@@ -744,53 +734,58 @@ export default function CartModal({ settings }: { settings?: any }) {
 
                         {/* Footer */}
                         {items.length > 0 && (
-                            <div className="p-6 border-t border-white/10 bg-black/20 space-y-4">
-                                <div className="flex items-center justify-between text-sm text-gray-400">
-                                    <span>Subtotal</span>
-                                    <span>L. {totalPrice.toFixed(2)}</span>
-                                </div>
-                                {deliveryMethod === 'delivery' && (
-                                    <div className="flex items-center justify-between text-sm text-gray-400">
-                                        <span>Envío</span>
-                                        <span>{deliveryPrice > 0 ? `L. ${deliveryPrice.toFixed(2)}` : 'Por calcular'}</span>
+                            <div className="p-6 border-t border-gray-100 bg-gray-50">
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between text-sm text-gray-500">
+                                        <span>Subtotal</span>
+                                        <span className="font-mono text-gray-900">L. {totalPrice.toFixed(2)}</span>
                                     </div>
-                                )}
-                                <div className="flex items-center justify-between text-xl font-black uppercase pt-2 border-t border-white/10">
-                                    <span className="text-white">Total</span>
-                                    <span className="text-primary">L. {(totalPrice + deliveryPrice).toFixed(2)}</span>
+                                    {deliveryMethod === 'delivery' && (
+                                        <div className="flex items-center justify-between text-sm text-gray-500">
+                                            <span>Envío</span>
+                                            <span className="font-mono text-gray-900">{deliveryPrice > 0 ? `L. ${deliveryPrice.toFixed(2)}` : 'Por calcular'}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex items-center justify-between text-xl font-black uppercase pt-4 border-t border-dashed border-gray-300">
+                                        <span className="text-foreground">Total</span>
+                                        <span className="text-primary">L. {(totalPrice + deliveryPrice).toFixed(2)}</span>
+                                    </div>
                                 </div>
 
-                                {currentStep === 'cart' ? (
-                                    <button
-                                        type="button"
-                                        onClick={goToCheckout}
-                                        className="w-full bg-primary text-black font-bold py-4 rounded-xl hover:bg-accent transition-colors uppercase tracking-wide"
-                                    >
-                                        Continuar con el Pedido
-                                    </button>
-                                ) : (
-                                    <button
-                                        type="submit"
-                                        form="checkout-form"
-                                        disabled={isUploading}
-                                        className={`w-full font-bold py-4 rounded-xl transition-colors uppercase tracking-wide flex items-center justify-center gap-2 ${isUploading
-                                            ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
-                                            : 'bg-green-600 text-white hover:bg-green-500'
-                                            }`}
-                                    >
-                                        {isUploading ? (
-                                            <>
-                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                                Enviando...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Send size={20} />
-                                                Enviar Pedido por WhatsApp
-                                            </>
-                                        )}
-                                    </button>
-                                )}
+                                <div className="mt-6">
+
+                                    {currentStep === 'cart' ? (
+                                        <button
+                                            type="button"
+                                            onClick={goToCheckout}
+                                            className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-accent transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide border border-transparent"
+                                        >
+                                            Continuar con el Pedido
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="submit"
+                                            form="checkout-form"
+                                            disabled={isUploading}
+                                            className={`w-full font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide flex items-center justify-center gap-2 border border-transparent ${isUploading
+                                                ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
+                                                : 'bg-green-600 text-white hover:bg-green-700'
+                                                }`}
+                                        >
+                                            {isUploading ? (
+                                                <>
+                                                    <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                                                    Enviando...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Send size={20} />
+                                                    Enviar Pedido por WhatsApp
+                                                </>
+                                            )}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         )}
                     </motion.div>

@@ -46,7 +46,7 @@ export default function LocationPicker({ onLocationSelect, initialAddress }: Loc
 
         const handleError = (error: GeolocationPositionError) => {
             console.error('Error getting location:', error);
-            
+
             // If high accuracy failed, try without it (fallback for desktop)
             if (error.code === error.TIMEOUT) {
                 navigator.geolocation.getCurrentPosition(
@@ -119,18 +119,18 @@ export default function LocationPicker({ onLocationSelect, initialAddress }: Loc
                 value={manualAddress}
                 onChange={(e) => setManualAddress(e.target.value)}
                 placeholder="Ingrese su dirección completa"
-                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-primary transition-colors"
+                className="w-full bg-white border border-gray-200 rounded-lg p-3 text-foreground focus:outline-none focus:border-primary transition-colors"
             />
             <button
                 type="button"
                 onClick={handleManualAddressSubmit}
                 disabled={!manualAddress.trim()}
-                className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-colors text-sm"
+                className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-colors text-sm"
             >
                 <Navigation size={18} />
                 <span>Confirmar Dirección</span>
             </button>
-            <p className="text-gray-400 text-xs text-center">Envío a domicilio: L. 120</p>
+            <p className="text-gray-500 text-xs text-center">Envío a domicilio: L. 120</p>
         </div>
     );
 }
