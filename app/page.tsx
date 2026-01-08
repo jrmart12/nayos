@@ -10,41 +10,7 @@ import FadeInUp from '@/components/animations/FadeInUp'
 
 export const revalidate = 60
 
-// Placeholder products for when Sanity is empty
-const placeholderProducts = [
-  {
-    _id: 'placeholder-1',
-    name: 'La Brava 1.50',
-    description: 'Nueva salsa brava, carne angus, queso mozarella, cebolla caramelizada, y bacon crujiente.',
-    price: 245,
-    category: 'hamburguesas',
-    slug: { current: 'la-brava' },
-  },
-  {
-    _id: 'placeholder-2',
-    name: 'Bacon Cheese Burger',
-    description: 'Carne Angus Certified, bacon crujiente, queso americano, sweet relish, salsa nayos.',
-    price: 249,
-    category: 'hamburguesas',
-    slug: { current: 'bacon-cheese' },
-  },
-  {
-    _id: 'placeholder-3',
-    name: 'Pork Belly Burger',
-    description: 'Carne Angus Certified, y crujiente panceta de cerdo, queso americano, pepinillos.',
-    price: 279,
-    category: 'hamburguesas',
-    slug: { current: 'pork-belly' },
-  },
-  {
-    _id: 'placeholder-4',
-    name: 'Classic Chicken Sandwich',
-    description: 'Jugosa pechuga de pollo, queso americano, sweet relish, y salsa nayos.',
-    price: 164,
-    category: 'pollo',
-    slug: { current: 'classic-chicken' },
-  },
-];
+
 
 const placeholderTestimonials = [
   {
@@ -81,7 +47,6 @@ export default async function Home() {
   ])
 
   // Use placeholders if no data
-  const displayProducts = (bestSellers && bestSellers.length > 0) ? bestSellers : placeholderProducts;
   const displayTestimonials = (testimonials && testimonials.length > 0) ? testimonials : placeholderTestimonials;
 
   return (
@@ -95,13 +60,15 @@ export default async function Home() {
           </FadeInUp>
 
           {/* Best Sellers / Products */}
-          <FadeInUp delay={0.1}>
-            <Products
-              title="Platillos Más Vendidos"
-              description="Los favoritos de nuestros clientes"
-              products={displayProducts}
-            />
-          </FadeInUp>
+          {bestSellers && bestSellers.length > 0 && (
+            <FadeInUp delay={0.1}>
+              <Products
+                title="Platillos Más Vendidos"
+                description="Los favoritos de nuestros clientes"
+                products={bestSellers}
+              />
+            </FadeInUp>
+          )}
 
           {/* About Section - Always show */}
           <FadeInUp delay={0.1}>

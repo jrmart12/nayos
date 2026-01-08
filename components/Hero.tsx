@@ -27,7 +27,7 @@ export default function Hero({ data }: HeroProps) {
     ];
 
     return (
-        <section className="relative min-h-screen bg-background overflow-hidden pt-32 pb-16">
+        <section className="relative min-h-screen bg-background overflow-hidden pt-22 pb-14">
             <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center max-w-4xl mx-auto mt-10">
                     {/* Main Title */}

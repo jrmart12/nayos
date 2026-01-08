@@ -21,6 +21,13 @@ const caveat = Caveat({
   variable: "--font-caveat",
 });
 
+export const viewport = {
+  themeColor: '#FFFFFF',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://nayosburgers.com'),
   title: {
