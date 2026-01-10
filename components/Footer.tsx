@@ -15,17 +15,17 @@ export default function Footer({ settings }: FooterProps) {
     const logo = settings?.logo;
 
     return (
-        <footer className="bg-white border-t border-border py-16">
+        <footer className="bg-[#FFF8F0] border-t border-border py-16">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
                     {/* Brand */}
                     <div className="col-span-1 md:col-span-2">
                         <div className="mb-6 flex items-center">
                             <Image
-                                src="/nayos_logo.jpg"
+                                src="/nayos_logo.png"
                                 alt="Nayos Logo"
-                                width={60}
-                                height={60}
+                                width={160}
+                                height={160}
                                 className="object-contain mr-3"
                             />
                         </div>

@@ -200,24 +200,37 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
     // If no cuts and no options, just show simple add to cart
     if (!hasCuts && !hasOptions) {
         return (
-            <button
-                onClick={() => {
-                    addToCart({
-                        _id: product._id,
-                        name: product.name,
-                        price: product.price || 0,
-                        image: product.image,
-                        slug: product.slug,
-                        unit: 'porción'
-                    })
-                }}
-                className="w-full py-4 rounded-lg font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors flex items-center justify-center gap-2 text-lg uppercase tracking-wide"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                Agregar al Carrito
-            </button>
+            <div className="space-y-4">
+                {/* Price Summary */}
+                {product.price && (
+                    <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6 shadow-xl">
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-700 text-lg font-bold uppercase">Precio:</span>
+                            <span className="text-[#9B292C] text-3xl md:text-4xl font-black" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>L{product.price.toFixed(0)}</span>
+                        </div>
+                    </div>
+                )}
+                
+                <button
+                    onClick={() => {
+                        addToCart({
+                            _id: product._id,
+                            name: product.name,
+                            price: product.price || 0,
+                            image: product.image,
+                            slug: product.slug,
+                            unit: 'porción'
+                        })
+                    }}
+                    className="w-full py-5 md:py-6 rounded-2xl font-black text-lg md:text-xl bg-[#9B292C] hover:bg-[#7A2123] text-white border-4 border-[#9B292C] hover:scale-105 transition-all flex items-center justify-center gap-3 uppercase tracking-wide shadow-2xl"
+                    style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Agregar al Carrito
+                </button>
+            </div>
         )
     }
 
@@ -226,8 +239,8 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
             {/* Cut Selector */}
             {hasCuts && availableCuts.length > 0 && (
                 <div>
-                    <label htmlFor="cut-selector" className="block text-xl font-bold text-white mb-4">
-                        Selecciona una Porción {hasCuts && <span className="text-amber-500">*</span>}
+                    <label htmlFor="cut-selector" className="block text-xl md:text-2xl font-black text-[#9B292C] mb-4 uppercase tracking-tight" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>
+                        Selecciona una Porción {hasCuts && <span className="text-[#9B292C]">*</span>}
                     </label>
                     <select
                         id="cut-selector"
@@ -237,12 +250,12 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
                             const cut = product.cuts?.find(c => c.weight === weight && c.price === parseFloat(price))
                             setSelectedCut(cut || null)
                         }}
-                        className="w-full bg-black/50 backdrop-blur-xl text-white rounded-lg p-4 border border-white/20 focus:border-amber-500 focus:outline-none text-lg"
+                        className="w-full bg-white text-gray-900 rounded-2xl p-4 border-4 border-[#9B292C] focus:outline-none text-lg font-bold shadow-xl"
                     >
                         <option value="">Selecciona una porción...</option>
                         {availableCuts.map((cut, index) => (
                             <option key={index} value={`${cut.weight}-${cut.price}`}>
-                                {cut.weight} - L. {cut.price.toFixed(2)}
+                                {cut.weight} - L{cut.price.toFixed(0)}
                             </option>
                         ))}
                     </select>
@@ -256,23 +269,23 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
                 const selections = selectedOptions[option.name] || []
 
                 return (
-                    <div key={idx} className="backdrop-blur-xl bg-black/30 border border-white/20 rounded-lg overflow-hidden">
+                    <div key={idx} className="bg-white border-4 border-[#9B292C] rounded-2xl overflow-hidden shadow-xl">
                         {/* Header */}
                         <button
                             onClick={() => setExpandedOption(isExpanded ? null : idx)}
-                            className="w-full p-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+                            className="w-full p-4 md:p-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
                         >
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
-                                    <h3 className="text-lg font-bold text-white">
-                                        {option.name} {option.required && <span className="text-amber-500">*</span>}
+                                    <h3 className="text-lg md:text-xl font-black text-[#9B292C] uppercase tracking-tight" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>
+                                        {option.name} {option.required && <span className="text-[#9B292C]">*</span>}
                                     </h3>
                                     {isComplete && (
-                                        <Check className="text-green-500" size={20} />
+                                        <Check className="text-green-600" size={22} strokeWidth={3} />
                                     )}
                                 </div>
                                 {!isExpanded && isComplete && (
-                                    <p className="text-sm text-gray-400 mt-1">
+                                    <p className="text-sm text-gray-700 mt-2 font-bold">
                                         {selections.join(', ')}
                                     </p>
                                 )}
@@ -280,37 +293,45 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
                                 {(product.name.toLowerCase().includes('alitas') || product.name.toLowerCase().includes('boneless')) &&
                                     (option.name.toLowerCase().includes('salsa') || option.name.toLowerCase().includes('sabor')) &&
                                     selectedCut && (
-                                        <p className="text-xs text-amber-500 mt-1">
+                                        <p className="text-xs text-[#9B292C] mt-1 font-bold">
                                             Máximo {Math.max(1, Math.floor(parseInt(selectedCut.weight.match(/\d+/)?.[0] || '0') / 6))} salsas
                                         </p>
                                     )}
                             </div>
                             <div className="flex items-center gap-2">
                                 {!isExpanded && isComplete && (
-                                    <Edit2 className="text-amber-500" size={18} />
+                                    <Edit2 className="text-[#9B292C]" size={18} />
                                 )}
-                                {isExpanded ? <ChevronUp size={24} className="text-white" /> : <ChevronDown size={24} className="text-white" />}
+                                {isExpanded ? <ChevronUp size={24} className="text-[#9B292C]" /> : <ChevronDown size={24} className="text-[#9B292C]" />}
                             </div>
                         </button>
 
                         {/* Choices - Collapsible */}
                         {isExpanded && (
-                            <div className="p-4 pt-0 space-y-2 max-h-96 overflow-y-auto">
+                            <div className="p-4 pt-0 space-y-3 max-h-96 overflow-y-auto bg-gray-50">
                                 {option.choices.map((choice, choiceIdx) => (
                                     <label
                                         key={choiceIdx}
-                                        className="flex items-center gap-3 p-3 rounded-lg bg-black/50 backdrop-blur-xl border border-white/20 hover:border-amber-500 cursor-pointer transition-all"
+                                        className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                                            selections.includes(choice.label)
+                                                ? 'bg-[#9B292C] border-[#9B292C] shadow-lg'
+                                                : 'bg-white border-gray-300 hover:border-[#9B292C] hover:shadow-md'
+                                        }`}
                                     >
                                         <input
                                             type={option.multiple ? "checkbox" : "radio"}
                                             name={option.name}
                                             checked={selections.includes(choice.label)}
                                             onChange={() => handleOptionChange(option.name, choice.label, option.multiple, idx)}
-                                            className="w-5 h-5 accent-amber-500"
+                                            className="w-5 h-5 accent-[#9B292C]"
                                         />
-                                        <span className="flex-1 text-white font-medium">{choice.label}</span>
+                                        <span className={`flex-1 font-bold uppercase tracking-wide text-sm ${
+                                            selections.includes(choice.label) ? 'text-white' : 'text-gray-800'
+                                        }`}>{choice.label}</span>
                                         {choice.extraPrice > 0 && (
-                                            <span className="text-amber-500 font-bold">+L. {choice.extraPrice.toFixed(2)}</span>
+                                            <span className={`font-black text-sm ${
+                                                selections.includes(choice.label) ? 'text-white' : 'text-[#9B292C]'
+                                            }`}>+L{choice.extraPrice.toFixed(0)}</span>
                                         )}
                                     </label>
                                 ))}
@@ -323,7 +344,7 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
             {/* Special Instructions */}
             {product.allowSpecialInstructions && (
                 <div>
-                    <label htmlFor="special-instructions" className="block text-xl font-bold text-white mb-4">
+                    <label htmlFor="special-instructions" className="block text-xl md:text-2xl font-black text-[#9B292C] mb-4 uppercase tracking-tight" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>
                         Indicaciones Especiales (Opcional)
                     </label>
                     <textarea
@@ -332,16 +353,16 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
                         onChange={(e) => setSpecialInstructions(e.target.value)}
                         placeholder="Ej: Sin cebolla, extra picante, etc."
                         rows={3}
-                        className="w-full bg-black/50 backdrop-blur-xl text-white rounded-lg p-4 border border-white/20 focus:border-amber-500 focus:outline-none resize-none"
+                        className="w-full bg-white text-gray-900 rounded-2xl p-4 border-4 border-[#9B292C] focus:outline-none resize-none font-semibold shadow-xl"
                     />
                 </div>
             )}
 
             {/* Price Summary */}
-            <div className="backdrop-blur-xl bg-black/50 border border-white/30 rounded-lg p-4">
+            <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6 shadow-xl">
                 <div className="flex justify-between items-center">
-                    <span className="text-white/70">Precio Total:</span>
-                    <span className="text-amber-500 text-3xl font-black">L. {calculateTotalPrice().toFixed(2)}</span>
+                    <span className="text-gray-700 text-lg font-bold uppercase">Precio Total:</span>
+                    <span className="text-[#9B292C] text-3xl md:text-4xl font-black" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>L{calculateTotalPrice().toFixed(0)}</span>
                 </div>
             </div>
 
@@ -350,14 +371,15 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
                 onClick={handleAddToCart}
                 disabled={hasCuts && !selectedCut}
                 className={`
-                    w-full py-4 rounded-lg font-bold text-black transition-colors flex items-center justify-center gap-2 text-lg uppercase tracking-wide
+                    w-full py-5 md:py-6 rounded-2xl font-black text-lg md:text-xl transition-all flex items-center justify-center gap-3 uppercase tracking-wide shadow-2xl
                     ${(hasCuts && !selectedCut) || !validateRequiredOptions()
-                        ? 'bg-gray-700 cursor-not-allowed opacity-50 text-white'
-                        : 'bg-amber-500 hover:bg-amber-600'
+                        ? 'bg-gray-400 cursor-not-allowed opacity-50 text-gray-700 border-4 border-gray-400'
+                        : 'bg-[#9B292C] hover:bg-[#7A2123] text-white border-4 border-[#9B292C] hover:scale-105'
                     }
                 `}
+                style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}
             >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 {(hasCuts && !selectedCut) || !validateRequiredOptions() ? 'Completa las opciones' : 'Agregar al Carrito'}

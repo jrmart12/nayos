@@ -44,16 +44,21 @@ export const metadata: Metadata = {
     title: "Nayos | Las Mejores Hamburguesas de La Ceiba",
     description: "Hamburguesas artesanales con ingredientes frescos. ¡Pide a domicilio!",
     siteName: "Nayos Burgers",
-    images: [{ url: "/nayos-logo.jpg", width: 800, height: 600, alt: "Nayos Logo" }],
+    images: [{
+      url: "/web-app-manifest-512x512.png",
+      width: 512,
+      height: 512,
+      alt: "Nayos Burgers - Las Mejores Hamburguesas de La Ceiba"
+    }],
     locale: "es_HN",
     type: "website",
     url: 'https://nayosburgers.com',
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Nayos Burgers",
     description: "Las mejores hamburguesas de La Ceiba.",
-    images: ["/nayos-logo.jpg"],
+    images: ["/web-app-manifest-512x512.png"],
   },
   applicationName: 'Nayos',
   appleWebApp: {
@@ -64,17 +69,13 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: '48x48', type: 'image/png' },
-      { url: '/icon-48.png', sizes: '48x48', type: 'image/png' },
-      { url: '/icon-96.png', sizes: '96x96', type: 'image/png' },
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
-      { url: '/icon-32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/web-app-manifest-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/web-app-manifest-512x512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
     ],
-    shortcut: '/icon-48.png',
+    shortcut: '/web-app-manifest-192x192.png',
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/web-app-manifest-192x192.png', sizes: '192x192', type: 'image/png' },
     ],
   },
   robots: {
@@ -114,8 +115,8 @@ export default async function RootLayout({
               "@type": "Organization",
               name: "Nayos Burgers",
               url: "https://nayosburgers.com",
-              logo: "https://nayosburgers.com/nayos-logo.jpg",
-              image: "https://nayosburgers.com/nayos-logo.jpg",
+              logo: "https://nayosburgers.com/nayos_logo.png",
+              image: "https://nayosburgers.com/nayos_logo.png",
               sameAs: [
                 "https://www.facebook.com/nayosburgers",
                 "https://www.instagram.com/nayosburgers"
@@ -130,8 +131,8 @@ export default async function RootLayout({
               "@context": "https://schema.org",
               "@type": "Restaurant",
               name: "Nayos Burgers",
-              image: "https://nayosburgers.com/nayos-logo.jpg",
-              logo: "https://nayosburgers.com/nayos-logo.jpg",
+              image: "https://nayosburgers.com/nayos_logo.png",
+              logo: "https://nayosburgers.com/nayos_logo.png",
               "@id": "https://nayosburgers.com",
               url: "https://nayosburgers.com",
               telephone: "+50495082348",

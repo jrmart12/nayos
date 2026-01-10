@@ -142,6 +142,16 @@ export default function CartModal({ settings }: { settings?: any }) {
 
         items.forEach(item => {
             message += `• ${item.name}\n`;
+            
+            if (item.cutWeight) {
+                message += `  Porción: ${item.cutWeight}\n`;
+            }
+            
+            if (item.selectedOptions && Object.keys(item.selectedOptions).length > 0) {
+                Object.entries(item.selectedOptions).forEach(([optionName, choices]) => {
+                    message += `  ${optionName}: ${(choices as string[]).join(', ')}\n`;
+                });
+            }
 
             if (item.specialInstructions) {
                 message += `  Indicaciones: ${item.specialInstructions}\n`;
@@ -311,12 +321,29 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                 <div className="flex-1 min-w-0">
                                                     <h3 className="text-foreground font-bold text-sm truncate uppercase tracking-wide">{item.name}</h3>
 
-                                                    {item.specialInstructions && (
-                                                        <div className="text-gray-500 text-xs mt-1">
-                                                            Indicaciones: {item.specialInstructions}
+                                                    {item.cutWeight && (
+                                                        <div className="text-gray-600 text-xs mt-1 font-semibold">
+                                                            {item.cutWeight}
                                                         </div>
                                                     )}
-                                                    <p className="text-primary font-bold text-sm mt-1">
+
+                                                    {item.selectedOptions && Object.keys(item.selectedOptions).length > 0 && (
+                                                        <div className="mt-2 space-y-1">
+                                                            {Object.entries(item.selectedOptions).map(([optionName, choices]) => (
+                                                                <div key={optionName} className="text-xs">
+                                                                    <span className="font-bold text-gray-700">{optionName}:</span>
+                                                                    <span className="text-gray-600 ml-1">{(choices as string[]).join(', ')}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+
+                                                    {item.specialInstructions && (
+                                                        <div className="text-gray-500 text-xs mt-2 italic">
+                                                            📝 {item.specialInstructions}
+                                                        </div>
+                                                    )}
+                                                    <p className="text-primary font-bold text-sm mt-2">
                                                         L. {item.price.toFixed(2)}
                                                     </p>
 

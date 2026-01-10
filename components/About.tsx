@@ -5,6 +5,7 @@ import { urlFor } from '@/sanity/lib/image'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import { ChefHat, Heart, Clock, MapPin } from 'lucide-react'
+import CheckeredPattern from './CheckeredPattern'
 
 interface AboutProps {
     data?: {
@@ -46,10 +47,11 @@ export default function About({ data }: AboutProps) {
     const featureIcons = [ChefHat, Heart, Clock, MapPin];
 
     return (
-        <section ref={sectionRef} id="about" className="relative py-20 bg-white overflow-hidden">
-            {/* Decorative checkered corners */}
-            <div className="checkered-corner-tl opacity-30" />
-            <div className="checkered-corner-br opacity-30" />
+        <section ref={sectionRef} id="about" className="relative py-20 bg-transparent overflow-hidden">
+            {/* Bottom Right Checkered Pattern */}
+            <div className="hidden md:block absolute bottom-0 right-0 w-64 md:w-96 opacity-80 z-0 rotate-180">
+                <CheckeredPattern className="w-full h-auto" />
+            </div>
 
             <motion.div
                 style={{ opacity }}

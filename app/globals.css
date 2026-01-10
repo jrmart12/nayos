@@ -3,9 +3,9 @@
 :root {
   --background: #F9F7F2;
   --foreground: #1A1A1A;
-  --primary: #E31C25;
+  --primary: #9B292C;
   --secondary: #FFFFFF;
-  --accent: #B91C1C;
+  --accent: #7A2123;
   --muted: #6B7280;
   --card: #FFFFFF;
   --card-foreground: #1A1A1A;
@@ -51,10 +51,10 @@ h6 {
 /* Checkered Pattern */
 .checkered-pattern {
   background-image:
-    linear-gradient(45deg, #E31C25 25%, transparent 25%),
-    linear-gradient(-45deg, #E31C25 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #E31C25 75%),
-    linear-gradient(-45deg, transparent 75%, #E31C25 75%);
+    linear-gradient(45deg, #9B292C 25%, transparent 25%),
+    linear-gradient(-45deg, #9B292C 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #9B292C 75%),
+    linear-gradient(-45deg, transparent 75%, #9B292C 75%);
   background-size: 40px 40px;
   background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
 }
@@ -66,10 +66,10 @@ h6 {
   width: 120px;
   height: 120px;
   background-image:
-    linear-gradient(45deg, #E31C25 25%, transparent 25%),
-    linear-gradient(-45deg, #E31C25 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #E31C25 75%),
-    linear-gradient(-45deg, transparent 75%, #E31C25 75%);
+    linear-gradient(45deg, #9B292C 25%, transparent 25%),
+    linear-gradient(-45deg, #9B292C 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #9B292C 75%),
+    linear-gradient(-45deg, transparent 75%, #9B292C 75%);
   background-size: 30px 30px;
   background-position: 0 0, 0 15px, 15px -15px, -15px 0px;
   clip-path: polygon(0 0, 100% 0, 0 100%);
@@ -82,10 +82,10 @@ h6 {
   width: 120px;
   height: 120px;
   background-image:
-    linear-gradient(45deg, #E31C25 25%, transparent 25%),
-    linear-gradient(-45deg, #E31C25 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #E31C25 75%),
-    linear-gradient(-45deg, transparent 75%, #E31C25 75%);
+    linear-gradient(45deg, #9B292C 25%, transparent 25%),
+    linear-gradient(-45deg, #9B292C 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #9B292C 75%),
+    linear-gradient(-45deg, transparent 75%, #9B292C 75%);
   background-size: 30px 30px;
   background-position: 0 0, 0 15px, 15px -15px, -15px 0px;
   clip-path: polygon(100% 0, 100% 100%, 0 100%);

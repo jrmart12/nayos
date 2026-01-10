@@ -70,81 +70,75 @@ export default function Navbar({ settings }: NavbarProps) {
 
     return (
         <>
-            <nav
-                className={cn(
-                    "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                    scrolled
-                        ? "bg-white shadow-md py-2"
-                        : "bg-white py-4"
-                )}
-            >
-                <div className="container mx-auto px-4">
-                    <div className="flex justify-between items-center h-12">
-                        {/* Left Navigation - Desktop */}
-                        <div className="hidden md:flex items-center space-x-8 flex-1">
-                            {leftLinks.map((link) => (
+            {/* Top Burgundy Bar */}
+            <div className="top-0 left-0 right-0 z-50 bg-[#9B292C] h-3"></div>
+
+            {/* Main Navbar */}
+            <nav className=" top-3 left-0 right-0 z-50 bg-[#FFF8F0] shadow-lg">
+                <div className="container mx-auto px-4 py-4">
+                    <div className="flex items-center justify-between">
+                        {/* Left - Stacked Navigation Buttons (Desktop) */}
+                        <div className="hidden md:flex flex-col gap-2">
+                            {navLinks.map((link) => (
                                 <Link
                                     key={link.label}
                                     href={resolveLink(link.link)}
                                     onClick={(e) => handleNavClick(e, link.link)}
-                                    className="text-foreground hover:text-primary transition-colors font-semibold uppercase tracking-wide text-sm"
+                                    className="border-2 border-[#9B292C] bg-[#FFF8F0] text-[#9B292C] px-6 py-2 rounded-full font-bold uppercase text-xs hover:bg-[#9B292C] hover:text-white transition-all text-center min-w-[140px]"
                                 >
                                     {link.label}
                                 </Link>
                             ))}
                         </div>
 
-                        {/* Center Spacer for Logo */}
-                        <div className="hidden md:block w-32" />
+                        {/* Center - Logo */}
+                        <Link href="/" className="flex-shrink-0">
+                            <Image
+                                src="/logo.svg"
+                                alt="Nayos"
+                                width={400}
+                                height={40}
+                                className="h-40 w-auto"
+                                priority
+                            />
+                        </Link>
 
-                        {/* Right Navigation - Desktop */}
-                        <div className="hidden md:flex items-center justify-end space-x-8 flex-1">
-                            {rightLinks.map((link) => (
-                                <Link
-                                    key={link.label}
-                                    href={resolveLink(link.link)}
-                                    onClick={(e) => handleNavClick(e, link.link)}
-                                    className="text-foreground hover:text-primary transition-colors font-semibold uppercase tracking-wide text-sm"
-                                >
-                                    {link.label}
-                                </Link>
-                            ))}
-
+                        {/* Right - Order Button & Cart (Desktop) */}
+                        <div className="hidden md:flex items-center gap-4">
                             <button
                                 onClick={() => setCartOpen(true)}
-                                className="relative text-foreground hover:text-primary transition-colors"
+                                className="relative text-[#9B292C] hover:text-[#7A2123] transition-colors"
                             >
-                                <ShoppingCart size={22} />
+                                <ShoppingCart size={24} />
                                 {totalItems > 0 && (
-                                    <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    <span className="absolute -top-2 -right-2 bg-[#9B292C] text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                         {totalItems}
                                     </span>
                                 )}
                             </button>
-
                             <a
                                 href="/menu"
-                                className="bg-primary text-white px-6 py-2.5 rounded-full font-bold uppercase text-sm hover:bg-accent transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                                className="bg-[#9B292C] text-white px-8 py-4 rounded-full font-black uppercase text-sm hover:bg-[#7A2123] transition-all shadow-lg hover:shadow-xl hover:scale-105"
                             >
-                                ¡Pide Ahora!
+                                ¡Ordena Ahora!
                             </a>
                         </div>
 
                         {/* Mobile - Cart & Menu */}
-                        <div className="md:hidden flex items-center gap-4 ml-auto">
+                        <div className="md:hidden flex items-center gap-4">
                             <button
                                 onClick={() => setCartOpen(true)}
-                                className="text-foreground hover:text-primary transition-colors relative"
+                                className="text-[#9B292C] hover:text-[#7A2123] transition-colors relative"
                             >
                                 <ShoppingCart size={24} />
                                 {totalItems > 0 && (
-                                    <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    <span className="absolute -top-2 -right-2 bg-[#9B292C] text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                         {totalItems}
                                     </span>
                                 )}
                             </button>
                             <button
-                                className="text-foreground"
+                                className="text-[#9B292C]"
                                 onClick={() => setIsOpen(!isOpen)}
                             >
                                 {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -160,57 +154,30 @@ export default function Navbar({ settings }: NavbarProps) {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="md:hidden bg-white overflow-hidden border-t border-gray-100"
+                            className="md:hidden bg-[#FFF8F0] overflow-hidden border-t-2 border-[#9B292C]"
                         >
-                            <div className="flex flex-col items-center py-8 space-y-6 mt-4">
+                            <div className="flex flex-col items-center py-8 space-y-4">
                                 {navLinks.map((link) => (
                                     <Link
                                         key={link.label}
                                         href={resolveLink(link.link)}
                                         onClick={(e) => handleNavClick(e, link.link)}
-                                        className="text-xl font-semibold uppercase text-foreground hover:text-primary transition-colors"
+                                        className="border-2 border-[#9B292C] bg-[#FFF8F0] text-[#9B292C] px-8 py-2 rounded-full font-bold uppercase text-sm hover:bg-[#9B292C] hover:text-white transition-all w-48 text-center"
                                     >
                                         {link.label}
                                     </Link>
                                 ))}
                                 <a
                                     href="/menu"
-                                    className="bg-primary text-white px-8 py-3 rounded-full font-bold uppercase text-sm hover:bg-accent transition-all shadow-lg"
+                                    className="bg-[#9B292C] text-white px-8 py-3 rounded-full font-black uppercase text-sm hover:bg-[#7A2123] transition-all shadow-lg w-48 text-center"
                                 >
-                                    ¡Pide Ahora!
+                                    ¡Ordena Ahora!
                                 </a>
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </nav>
-
-            {/* Floating Center Logo - Fixed Position */}
-            <Link
-                href="/"
-                className={cn(
-                    "fixed left-1/2 -translate-x-1/2 z-[60] transition-all duration-300",
-                    scrolled ? "top-1" : "top-6",
-                    isCartOpen ? "opacity-0 pointer-events-none translate-y-[-20px]" : "opacity-100 translate-y-0"
-                )}
-            >
-                <div className={cn(
-                    "bg-white rounded-full shadow-xl border-[3px] border-primary flex items-center justify-center transition-all duration-300",
-                    scrolled ? "w-14 h-14" : "w-20 h-20"
-                )}>
-                    <div className="relative w-full h-full p-0.5">
-                        <Image
-                            src="/nayos_logo.jpg"
-                            alt="Nayos"
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            quality={100}
-                            className="object-contain rounded-full"
-                            priority
-                        />
-                    </div>
-                </div>
-            </Link>
         </>
     );
 }

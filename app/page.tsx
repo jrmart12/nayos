@@ -1,8 +1,9 @@
 import { client, HERO_QUERY, ABOUT_QUERY, FEATURED_PRODUCTS_QUERY, BEST_SELLERS_QUERY, TESTIMONIALS_QUERY, SITE_SETTINGS_QUERY } from '@/lib/sanity'
 import Hero from '@/components/Hero'
+import FeaturedBurgers from '@/components/FeaturedBurgers'
+import Philosophy from '@/components/Philosophy'
+import VideoShowcase from '@/components/VideoShowcase'
 import About from '@/components/About'
-import Products from '@/components/Products'
-import Testimonials from '@/components/Testimonials'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import DeliverySection from '@/components/DeliverySection'
@@ -50,32 +51,37 @@ export default async function Home() {
   const displayTestimonials = (testimonials && testimonials.length > 0) ? testimonials : placeholderTestimonials;
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen" style={{ backgroundImage: 'url(/sand-beige.jpg)', backgroundSize: 'cover', backgroundAttachment: 'fixed' }}>
       <div className="relative z-10">
         <Navbar settings={settings} />
         <main>
-          {/* Hero - Always show */}
+          {/* Hero Section */}
           <FadeInUp>
             <Hero data={hero} />
           </FadeInUp>
 
-          {/* Best Sellers / Products */}
-          {bestSellers && bestSellers.length > 0 && (
-            <FadeInUp delay={0.1}>
-              <Products
-                title="Platillos Más Vendidos"
-                description="Los favoritos de nuestros clientes"
-                products={bestSellers}
-              />
-            </FadeInUp>
-          )}
-
-          {/* About Section - Always show */}
+          {/* Featured Burgers Showcase */}
           <FadeInUp delay={0.1}>
-            <About data={about} />
+            <FeaturedBurgers products={bestSellers} />
           </FadeInUp>
 
-          {/* Delivery Section - Always show */}
+          {/* Video Showcase */}
+          <FadeInUp delay={0.1}>
+            <VideoShowcase />
+          </FadeInUp>
+
+          {/* Philosophy Section */}
+          <FadeInUp delay={0.1}>
+            <Philosophy />
+          </FadeInUp>
+
+          {/* About Section (if you want to keep original about) */}
+          {about && (
+            <FadeInUp delay={0.1}>
+              <About data={about} />
+            </FadeInUp>
+          )}
+          {/* Delivery Section with WhatsApp */}
           <FadeInUp delay={0.1}>
             <DeliverySection delivery={settings?.delivery} phone={settings?.phone} logo={settings?.logo} />
           </FadeInUp>
