@@ -18,7 +18,7 @@ interface HeroProps {
 
 export default function Hero({ data }: HeroProps) {
     const title = data?.title || "Smash'd Burgers";
-    const subtitle = data?.subtitle || "Las mejores hamburguesas smash de La Ceiba";
+    const subtitle = data?.subtitle || "Las mejores Smash'd Burgers de La Ceiba";
     const primaryBtnText = data?.primaryButtonText || "ORDENA AHORA";
     const primaryBtnLink = data?.primaryButtonLink || "/menu";
 
@@ -29,10 +29,10 @@ export default function Hero({ data }: HeroProps) {
             <div className="bg-[#9B292C] text-white py-4 overflow-hidden relative z-10">
                 <div className="flex animate-marquee">
                     <span className="text-2xl md:text-4xl font-black uppercase whitespace-nowrap">
-                        SMASH'D BURGERS LA CEIBA • SMASH'D TO PERFECTION • SMASH'D BURGERS LA CEIBA • SMASH'D TO PERFECTION • 
+                        SMASH'D BURGERS LA CEIBA • SMASH'D TO PERFECTION • SMASH'D BURGERS LA CEIBA • SMASH'D TO PERFECTION •
                     </span>
                     <span className="text-2xl md:text-4xl font-black uppercase whitespace-nowrap">
-                        SMASH'D BURGERS LA CEIBA • SMASH'D TO PERFECTION • SMASH'D BURGERS LA CEIBA • SMASH'D TO PERFECTION • 
+                        SMASH'D BURGERS LA CEIBA • SMASH'D TO PERFECTION • SMASH'D BURGERS LA CEIBA • SMASH'D TO PERFECTION •
                     </span>
                 </div>
             </div>
@@ -53,7 +53,7 @@ export default function Hero({ data }: HeroProps) {
                         >
                             {/* Large Image */}
                             <div className="relative h-[300px] md:h-[600px] rounded-3xl overflow-hidden shadow-2xl border-4 border-[#9B292C]">
-                                <Image 
+                                <Image
                                     src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1200&q=80"
                                     alt="Deliciosa hamburguesa Nayos"
                                     fill
@@ -82,7 +82,7 @@ export default function Hero({ data }: HeroProps) {
                         >
                             {/* Logo */}
                             <div className="mb-4 md:mb-8 flex justify-center lg:justify-start">
-                                <Image 
+                                <Image
                                     src="/smashed.svg"
                                     alt="Nayos Logo"
                                     width={180}
@@ -92,7 +92,7 @@ export default function Hero({ data }: HeroProps) {
                             </div>
 
                             {/* Main Heading */}
-                            <h1 
+                            <h1
                                 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-[#9B292C] mb-4 md:mb-6 leading-none uppercase"
                                 style={{ fontFamily: 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif' }}
                             >

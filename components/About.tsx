@@ -71,7 +71,7 @@ export default function About({ data }: AboutProps) {
                             {data?.title || "Sobre Nosotros"}
                         </h2>
                         <p className="text-lg text-muted max-w-2xl mx-auto">
-                            {data?.description || "Somos apasionados por las hamburguesas. Desde 2020, hemos servido las mejores burgers artesanales de La Ceiba con ingredientes frescos y mucho sabor."}
+                            {data?.description || "Somos apasionados por las hamburguesas. Desde 2020, hemos servido las mejores Smash'd Burgers de La Ceiba con ingredientes frescos y mucho sabor."}
                         </p>
                     </div>
 

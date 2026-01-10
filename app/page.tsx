@@ -1,4 +1,5 @@
 import { client, HERO_QUERY, ABOUT_QUERY, FEATURED_PRODUCTS_QUERY, BEST_SELLERS_QUERY, TESTIMONIALS_QUERY, SITE_SETTINGS_QUERY } from '@/lib/sanity'
+import Image from "next/image";
 import Hero from '@/components/Hero'
 import FeaturedBurgers from '@/components/FeaturedBurgers'
 import Philosophy from '@/components/Philosophy'
@@ -18,7 +19,7 @@ const placeholderTestimonials = [
     _id: 'test-1',
     name: 'María García',
     role: 'Cliente Frecuente',
-    content: 'Las mejores hamburguesas de La Ceiba! La Brava es mi favorita.',
+    content: 'Las mejores Smash\'d Burgers de La Ceiba! La Brava es mi favorita.',
     rating: 5,
   },
   {
@@ -51,7 +52,19 @@ export default async function Home() {
   const displayTestimonials = (testimonials && testimonials.length > 0) ? testimonials : placeholderTestimonials;
 
   return (
-    <div className="relative min-h-screen" style={{ backgroundImage: 'url(/sand-beige.jpg)', backgroundSize: 'cover', backgroundAttachment: 'fixed' }}>
+    <div className="relative min-h-screen">
+      <div className="fixed inset-0 z-0">
+        <div className="relative w-full h-full">
+          <Image
+            src="/sand-beige.jpg"
+            alt="Background Texture"
+            fill
+            className="object-cover"
+            priority
+            quality={85}
+          />
+        </div>
+      </div>
       <div className="relative z-10">
         <Navbar settings={settings} />
         <main>

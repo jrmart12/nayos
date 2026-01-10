@@ -9,13 +9,13 @@ export const revalidate = 60
 
 export const metadata: Metadata = {
     title: "Menú",
-    description: "Explora nuestro delicioso menú de hamburguesas artesanales. ¡Pide a domicilio en La Ceiba!",
+    description: "Explora nuestro delicioso menú de hamburguesas. ¡Pide a domicilio en La Ceiba!",
     alternates: {
         canonical: '/menu',
     },
     openGraph: {
         title: "Menú | Nayos Burgers",
-        description: "Las mejores hamburguesas artesanales de La Ceiba. ¡Pide a domicilio!",
+        description: "Las mejores Smash'd Burgers de La Ceiba. ¡Pide a domicilio!",
         images: [{ url: "/nayos_logo.jpg", width: 800, height: 600, alt: "Nayos Menu" }],
     },
 }

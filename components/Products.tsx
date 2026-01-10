@@ -59,7 +59,7 @@ export default function Products({ title, description, products }: ProductsProps
                         {title || 'Nuestro'} <span className="text-primary">{title ? '' : 'Menú'}</span>
                     </h2>
                     <p className="text-muted max-w-2xl mx-auto">
-                        {description || 'Ingredientes frescos, sabor inigualable, hamburguesas artesanales.'}
+                        {description || 'Ingredientes frescos, sabor inigualable, hamburguesas.'}
                     </p>
                 </motion.div>
 

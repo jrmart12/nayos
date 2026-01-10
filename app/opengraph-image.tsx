@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt = 'Nayos Burgers - Las Mejores Hamburguesas de La Ceiba'
+export const alt = 'Nayos Burgers - Las Mejores Smash\'d Burgers de La Ceiba'
 export const size = {
   width: 1200,
   height: 630,
@@ -40,7 +40,7 @@ export default async function Image() {
           fontWeight: 700,
           textAlign: 'center',
         }}>
-          Las Mejores Hamburguesas de La Ceiba
+          Las Mejores Smash'd Burgers de La Ceiba
         </div>
       </div>
     ),

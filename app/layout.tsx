@@ -31,24 +31,24 @@ export const viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://nayosburgers.com'),
   title: {
-    default: "Nayos | Las Mejores Hamburguesas de La Ceiba",
+    default: "Nayos | Las Mejores Smash'd Burgers de La Ceiba",
     template: "%s | Nayos Burgers"
   },
-  description: "Las mejores hamburguesas artesanales de La Ceiba, Honduras. Ingredientes frescos, sabor inigualable. ¡Pide a domicilio!",
+  description: "Las mejores Smash'd Burgers de La Ceiba, Honduras. Ingredientes frescos, sabor inigualable. ¡Pide a domicilio!",
   keywords: ["Nayos", "Hamburguesas", "Burgers", "La Ceiba", "Honduras", "Comida a Domicilio", "Restaurante"],
   authors: [{ name: "Nayos" }],
   alternates: {
     canonical: 'https://nayosburgers.com',
   },
   openGraph: {
-    title: "Nayos | Las Mejores Hamburguesas de La Ceiba",
-    description: "Hamburguesas artesanales con ingredientes frescos. ¡Pide a domicilio!",
+    title: "Nayos | Las Mejores Smash'd Burgers de La Ceiba",
+    description: "Smash'd Burgers con ingredientes frescos. ¡Pide a domicilio!",
     siteName: "Nayos Burgers",
     images: [{
       url: "/web-app-manifest-512x512.png",
       width: 512,
       height: 512,
-      alt: "Nayos Burgers - Las Mejores Hamburguesas de La Ceiba"
+      alt: "Nayos Burgers - Las Mejores Smash'd Burgers de La Ceiba"
     }],
     locale: "es_HN",
     type: "website",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Nayos Burgers",
-    description: "Las mejores hamburguesas de La Ceiba.",
+    description: "Las mejores Smash'd Burgers de La Ceiba.",
     images: ["/web-app-manifest-512x512.png"],
   },
   applicationName: 'Nayos',

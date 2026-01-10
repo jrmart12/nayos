@@ -30,7 +30,7 @@ export default function Footer({ settings }: FooterProps) {
                             />
                         </div>
                         <p className="text-muted max-w-md mb-6">
-                            Las mejores hamburguesas artesanales de La Ceiba. Ingredientes frescos, sabor inigualable, experiencia única.
+                            Las mejores Smash'd Burgers de La Ceiba. Ingredientes frescos, sabor inigualable, experiencia única.
                         </p>
                         <div className="flex space-x-4">
                             {facebook && (
