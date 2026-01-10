@@ -52,22 +52,9 @@ export default async function Home() {
   const displayTestimonials = (testimonials && testimonials.length > 0) ? testimonials : placeholderTestimonials;
 
   return (
-    <div className="relative min-h-screen">
-      <div className="fixed inset-0 z-0">
-        <div className="relative w-full h-full">
-          <Image
-            src="/sand-beige.jpg"
-            alt="Background Texture"
-            fill
-            className="object-cover"
-            priority
-            quality={85}
-          />
-        </div>
-      </div>
-      <div className="relative z-10">
-        <Navbar settings={settings} />
-        <main>
+    <div className="min-h-screen relative" style={{ backgroundImage: 'url(/sand-beige.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <Navbar settings={settings} />
+      <main className="relative z-10">
           {/* Hero Section */}
           <FadeInUp>
             <Hero data={hero} />
@@ -100,7 +87,6 @@ export default async function Home() {
           </FadeInUp>
         </main>
         <Footer settings={settings} />
-      </div>
     </div>
   )
 }
