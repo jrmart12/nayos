@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Oswald, Caveat } from "next/font/google";
+import Image from "next/image";
 import "./globals.css";
 import { CartProvider } from "@/contexts/CartContext";
 import CartButton from "@/components/CartButton";
@@ -115,8 +116,8 @@ export default async function RootLayout({
               "@type": "Organization",
               name: "Nayos Burgers",
               url: "https://nayos.vercel.app",
-              logo: "https://nayos.vercel.app/nayos_logo.png",
-              image: "https://nayos.vercel.app/nayos_logo.png",
+              logo: "https://nayos.vercel.app/web-app-manifest-512x512.png",
+              image: "https://nayos.vercel.app/web-app-manifest-512x512.png",
               sameAs: [
                 "https://www.facebook.com/nayosburgers",
                 "https://www.instagram.com/nayosburgers"
@@ -131,8 +132,8 @@ export default async function RootLayout({
               "@context": "https://schema.org",
               "@type": "Restaurant",
               name: "Nayos Burgers",
-              image: "https://nayos.vercel.app/nayos_logo.png",
-              logo: "https://nayos.vercel.app/nayos_logo.png",
+              image: "https://nayos.vercel.app/web-app-manifest-512x512.png",
+              logo: "https://nayos.vercel.app/web-app-manifest-512x512.png",
               "@id": "https://nayos.vercel.app",
               url: "https://nayos.vercel.app",
               telephone: "+50495082348",
