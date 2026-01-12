@@ -59,10 +59,19 @@ export default function MenuProducts({ products }: MenuProductsProps) {
             return orderA - orderB
         })
 
-    // Filter products based on selected category
-    const filteredProducts = selectedCategory === 'all'
-        ? products
+    // Filter AND Sort products based on selected category
+    let filteredProducts = selectedCategory === 'all'
+        ? [...products] // Create a copy to sort
         : products.filter(p => (p.category?.toLowerCase() || 'otros') === selectedCategory)
+
+    // Sort "all" view by category order
+    if (selectedCategory === 'all') {
+        filteredProducts.sort((a, b) => {
+            const orderA = categoryConfig[a.category?.toLowerCase() || '']?.order ?? 99
+            const orderB = categoryConfig[b.category?.toLowerCase() || '']?.order ?? 99
+            return orderA - orderB
+        })
+    }
 
     // Pagination
     const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE))
@@ -119,7 +128,7 @@ export default function MenuProducts({ products }: MenuProductsProps) {
                     <>
                         <div className="space-y-12 max-w-6xl mx-auto">
                             {paginatedProducts.map((product, index) => {
-                                const imageUrl = product.image 
+                                const imageUrl = product.image
                                     ? urlFor(product.image).width(800).height(600).url()
                                     : null
                                 const isEven = index % 2 === 0

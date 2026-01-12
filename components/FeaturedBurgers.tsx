@@ -12,6 +12,7 @@ interface Product {
     description?: string;
     price: number;
     currency?: string;
+    slug?: { current: string };
     image?: {
         asset: {
             _ref: string;
@@ -31,18 +32,21 @@ export default function FeaturedBurgers({ products = [] }: FeaturedBurgersProps)
             name: "NAYOS CHEESEBURGER",
             description: "CEBOLLAS A LA PLANCHA, DOBLE QUESO AMERICANO, PEPINILLOS Y SALSA NAYOS",
             price: 0,
+            slug: { current: 'nayos-cheeseburger' }
         },
         {
             _id: '2',
             name: "CLASSIC BURGER",
             description: "QUESO AMERICANO, TOMATE, LECHUGA, CEBOLLA, KETCHUP Y MOSTAZA",
             price: 0,
+            slug: { current: 'classic-burger' }
         },
         {
             _id: '3',
             name: "BACON BURGER",
             description: "TOCINO AHUMADO CRUJIENTE, QUESO AMERICANO Y SALSA NAYOS",
             price: 0,
+            slug: { current: 'bacon-burger' }
         }
     ];
 
@@ -76,10 +80,10 @@ export default function FeaturedBurgers({ products = [] }: FeaturedBurgersProps)
                 {/* Burgers Grid with Images - Alternating Layout */}
                 <div className="space-y-12 max-w-6xl mx-auto mb-16">
                     {displayProducts.map((product, index) => {
-                        const imageUrl = product.image 
+                        const imageUrl = product.image
                             ? urlFor(product.image).width(800).height(600).url()
                             : placeholderImages[index % placeholderImages.length];
-                        
+
                         const isEven = index % 2 === 0;
 
                         return (
@@ -90,8 +94,8 @@ export default function FeaturedBurgers({ products = [] }: FeaturedBurgersProps)
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
                             >
-                                <Link 
-                                    href="/menu"
+                                <Link
+                                    href={product.slug?.current ? `/menu/${product.slug.current}` : '/menu'}
                                     className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center group cursor-pointer"
                                 >
                                     {/* Burger Image - Alternates between left and right */}

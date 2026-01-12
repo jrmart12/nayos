@@ -54,7 +54,7 @@ export default function Hero({ data }: HeroProps) {
                             {/* Large Image */}
                             <div className="relative h-[300px] md:h-[600px] rounded-3xl overflow-hidden shadow-2xl border-4 border-[#9B292C]">
                                 <Image
-                                    src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1200&q=80"
+                                    src="/burger-header.png"
                                     alt="Deliciosa hamburguesa Nayos"
                                     fill
                                     className="object-cover"

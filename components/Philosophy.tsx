@@ -28,9 +28,9 @@ export default function Philosophy() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
                         {/* Image */}
-                        <div className="relative h-80 rounded-full overflow-hidden shadow-2xl">
+                        <div className="relative h-100 rounded-3xl overflow-hidden shadow-2xl">
                             <Image
-                                src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80"
+                                src="/burger-about.png"
                                 alt="Burger being made"
                                 fill
                                 className="object-cover"
@@ -43,9 +43,9 @@ export default function Philosophy() {
                                 En nuestro lugar, nos especializamos en un servicio al cliente increíble y rápido.
                             </h3>
                             <p className="text-base md:text-lg text-gray-700 leading-relaxed font-mono">
-                                Estamos en una misión de servir nuestros productos rápidamente y superar tus expectativas cada vez. 
-                                Creemos en un menú ágil que refleja la vibra de nuestro restaurante, aumenta la eficiencia y hace que ordenar en línea sea fácil. 
-                                Todo esto para elevar tu experiencia como cliente. Esto – no es solo un concepto; 
+                                Estamos en una misión de servir nuestros productos rápidamente y superar tus expectativas cada vez.
+                                Creemos en un menú ágil que refleja la vibra de nuestro restaurante, aumenta la eficiencia y hace que ordenar en línea sea fácil.
+                                Todo esto para elevar tu experiencia como cliente. Esto – no es solo un concepto;
                                 es nuestro estilo de vida.
                             </p>
                         </div>
@@ -69,15 +69,15 @@ export default function Philosophy() {
                             Disfruta la vida un poco más.
                         </h3>
                         <p className="text-base md:text-lg text-gray-700 leading-relaxed font-mono">
-                            Creemos que una pequeña pausa, un momento para abrazar, gratitud, reunirse con amigos, 
+                            Creemos que una pequeña pausa, un momento para abrazar, gratitud, reunirse con amigos,
                             y compartir una hamburguesa increíble puede ayudarte a disfrutar la vida un poco más.
                         </p>
                     </div>
 
                     {/* Image */}
-                    <div className="relative h-80 rounded-3xl overflow-hidden shadow-2xl order-1 md:order-2">
+                    <div className="relative h-90 rounded-3xl overflow-hidden shadow-2xl order-1 md:order-2">
                         <Image
-                            src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=80"
+                            src="/burger-about2.jpg"
                             alt="Enjoying a burger"
                             fill
                             className="object-cover"
@@ -109,16 +109,16 @@ export default function Philosophy() {
                                 El Primer Smash'd Burger de La Ceiba
                             </h3>
                             <p className="text-base md:text-lg text-gray-700 leading-relaxed font-mono mb-4">
-                                Se le conoce como el Rey del Smash, pero todos lo conocen como Nayos. Él es el cerebro 
-                                detrás de nuestras hamburguesas smash signature, creando su propia receta que convierte cada ingrediente, 
+                                Se le conoce como el Rey del Smash, pero todos lo conocen como Nayos. Él es el cerebro
+                                detrás de nuestras hamburguesas smash signature, creando su propia receta que convierte cada ingrediente,
                                 cada componente y cada salsa en pura felicidad hamburguesera.
                             </p>
                             <p className="text-base md:text-lg text-gray-700 leading-relaxed font-mono mb-4">
-                                Nayos es el primer lugar de smash'd burgers en La Ceiba. Somos una marca cool y relajada, 
+                                Nayos es el primer lugar de smash'd burgers en La Ceiba. Somos una marca cool y relajada,
                                 entregando un producto que es simple pero de calidad absoluta.
                             </p>
                             <p className="text-base md:text-lg text-gray-700 leading-relaxed font-mono mb-4">
-                                Nuestras carnes son <span className="font-black text-[#9B292C]">100% CARNE FRESCA BLACK ANGUS</span> y 
+                                Nuestras carnes son <span className="font-black text-[#9B292C]">100% CARNE FRESCA BLACK ANGUS</span> y
                                 nuestras papas están cocinadas a la perfección, con una textura delgada y crujiente.
                             </p>
                             <p className="text-lg md:text-xl font-black text-[#9B292C] mt-6 uppercase">
@@ -126,7 +126,7 @@ export default function Philosophy() {
                             </p>
                         </div>
 
-        
+
                     </div>
                 </motion.div>
             </div>
