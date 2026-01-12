@@ -142,11 +142,11 @@ export default function CartModal({ settings }: { settings?: any }) {
 
         items.forEach(item => {
             message += `• ${item.name}\n`;
-            
+
             if (item.cutWeight) {
                 message += `  Porción: ${item.cutWeight}\n`;
             }
-            
+
             if (item.selectedOptions && Object.keys(item.selectedOptions).length > 0) {
                 Object.entries(item.selectedOptions).forEach(([optionName, choices]) => {
                     message += `  ${optionName}: ${(choices as string[]).join(', ')}\n`;
@@ -169,35 +169,12 @@ export default function CartModal({ settings }: { settings?: any }) {
         // Payment method information
         if (customer?.paymentMethod) {
             message += `*MÉTODO DE PAGO:*\n`;
-            if (customer.paymentMethod === 'cash') {
-                message += `Efectivo\n`;
-                if (customer.cashChange) {
-                    message += `Cambio: ${customer.cashChange}\n`;
-                }
-            } else if (customer.paymentMethod === 'transfer') {
+            if (customer.paymentMethod === 'transfer') {
                 message += `Transferencia Bancaria\n`;
-                if (customer.selectedBank) {
-                    message += `Banco: ${customer.selectedBank}\n\n`;
-
-                    // Include bank account details
-                    if (customer.selectedBank === 'BAC') {
-                        message += `*Cuenta BAC:* 000000000\n`;
-                        message += `Titular: Nombre de Ejemplo\n`;
-                        message += `ID: 0000000000000\n`;
-                    } else if (customer.selectedBank === 'FICOHSA') {
-                        message += `*Cuenta FICOHSA:* 000000000\n`;
-                        message += `Titular: Nombre de Ejemplo\n`;
-                        message += `ID: 0000000000000\n`;
-                    } else if (customer.selectedBank === 'BANPAIS') {
-                        message += `*Cuenta BANPAIS:* 000000000\n`;
-                        message += `Titular: Nombre de Ejemplo\n`;
-                        message += `ID: 0000000000000\n`;
-                    } else if (customer.selectedBank === 'ATLANTIDA') {
-                        message += `*Cuenta ATLÁNTIDA:* 000000000\n`;
-                        message += `Titular: Nombre de Ejemplo\n`;
-                        message += `ID: 0000000000000\n`;
-                    }
-                }
+                // Always BAC
+                message += `Banco: BAC\n\n`;
+                message += `*Cuenta BAC:* 750490481\n`;
+                message += `Titular: Nayos\n`;
             } else if (customer.paymentMethod === 'bac_compra_click') {
                 message += `Pago con Tarjeta\n`;
                 message += `(Por favor generar link de pago)\n`;
@@ -494,20 +471,12 @@ export default function CartModal({ settings }: { settings?: any }) {
                                         {/* Payment Method */}
                                         <div>
                                             <label className="block text-xs font-bold text-gray-500 uppercase mb-3">Método de Pago *</label>
-                                            <div className="grid grid-cols-3 gap-2">
+                                            <div className="grid grid-cols-2 gap-2">
                                                 <button
                                                     type="button"
-                                                    onClick={() => onCustomerChange('paymentMethod', 'cash')}
-                                                    className={`p-3 rounded-lg border flex flex-col items-center gap-1 transition-all text-sm ${customer?.paymentMethod === 'cash'
-                                                        ? 'bg-primary text-white border-primary shadow-md'
-                                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
-                                                        }`}
-                                                >
-                                                    <span className="font-bold text-xs">Efectivo</span>
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => onCustomerChange('paymentMethod', 'transfer')}
+                                                    onClick={() => {
+                                                        onCustomerChange('paymentMethod', 'transfer');
+                                                    }}
                                                     className={`p-3 rounded-lg border flex flex-col items-center gap-1 transition-all text-sm ${customer?.paymentMethod === 'transfer'
                                                         ? 'bg-primary text-white border-primary shadow-md'
                                                         : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
@@ -528,205 +497,106 @@ export default function CartModal({ settings }: { settings?: any }) {
                                             </div>
                                             {formErrors.paymentMethod && <p className="text-red-500 text-xs mt-2">{formErrors.paymentMethod}</p>}
 
-                                            {/* Cash - Ask for change */}
-                                            {customer?.paymentMethod === 'cash' && (
-                                                <div className="mt-3">
-                                                    <label className="block text-xs font-bold text-gray-500 mb-2">¿Necesita cambio? ¿De cuánto?</label>
-                                                    <input
-                                                        type="text"
-                                                        className="w-full bg-white border border-gray-200 rounded-lg p-3 text-foreground focus:outline-none focus:border-primary transition-colors"
-                                                        placeholder="Ej: Sí, de L. 500"
-                                                        value={customer?.cashChange || ''}
-                                                        onChange={(e) => onCustomerChange('cashChange', e.target.value)}
-                                                    />
-                                                </div>
-                                            )}
-
-                                            {/* Transfer - Bank selection and info */}
+                                            {/* Transfer - Bank info */}
                                             {customer?.paymentMethod === 'transfer' && (
                                                 <div className="mt-3 space-y-3">
-                                                    <div>
-                                                        <label className="block text-xs font-bold text-gray-400 mb-2">Seleccione el banco</label>
-                                                        <div className="grid grid-cols-2 gap-2">
-                                                            {['BAC', 'FICOHSA', 'BANPAIS', 'ATLANTIDA'].map((bank) => (
-                                                                <button
-                                                                    key={bank}
-                                                                    type="button"
-                                                                    onClick={() => onCustomerChange('selectedBank', bank)}
-                                                                    className={`p-2 rounded-lg border text-sm transition-all ${customer?.selectedBank === bank
-                                                                        ? 'bg-primary text-white border-primary shadow-md'
-                                                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
-                                                                        }`}
-                                                                >
-                                                                    {bank}
-                                                                </button>
-                                                            ))}
+                                                    {/* Bank account info */}
+                                                    <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm">
+                                                        <p className="text-gray-900 font-bold mb-2">Datos de BAC:</p>
+
+                                                        <div className="flex items-center justify-between mb-1">
+                                                            <p className="text-gray-700 flex-1">Cuenta: <span className="font-mono font-bold">750490481</span></p>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    navigator.clipboard.writeText('750490481');
+                                                                    setCopiedAccount('BAC');
+                                                                    setTimeout(() => setCopiedAccount(null), 2000);
+                                                                }}
+                                                                className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'BAC' ? 'bg-green-600 text-white' : 'bg-primary hover:bg-primary/80 text-white'}`}
+                                                            >
+                                                                {copiedAccount === 'BAC' ? '¡Copiado!' : 'Copiar'}
+                                                            </button>
+                                                        </div>
+                                                        <p className="text-gray-700">Titular: Nayos</p>
+
+                                                        <div className="mt-4 pt-4 border-t border-gray-200">
+                                                            <label className="block text-xs font-bold text-gray-700 mb-2 uppercase">
+                                                                Comprobante de Transferencia *
+                                                            </label>
+                                                            <input
+                                                                ref={fileInputRef}
+                                                                type="file"
+                                                                accept="image/*"
+                                                                onChange={async (e) => {
+                                                                    if (e.target.files && e.target.files[0]) {
+                                                                        const file = e.target.files[0];
+                                                                        setTransferImage(file);
+                                                                        setFormErrors(prev => ({ ...prev, transferImage: undefined }));
+                                                                        setUploadError(null);
+                                                                        setUploadedImageUrl('');
+
+                                                                        // Upload immediately
+                                                                        setIsUploading(true);
+                                                                        try {
+                                                                            const compressedImage = await compressImage(file);
+                                                                            // Generate unique filename to prevent conflicts
+                                                                            const timestamp = Date.now();
+                                                                            const uniqueName = `${timestamp}-${compressedImage.name}`;
+                                                                            const blob = await upload(uniqueName, compressedImage, {
+                                                                                access: 'public',
+                                                                                handleUploadUrl: '/api/upload',
+                                                                            });
+                                                                            setUploadedImageUrl(blob.url);
+                                                                            console.log('Image uploaded successfully:', blob.url);
+                                                                        } catch (error) {
+                                                                            console.error('Error uploading image:', error);
+                                                                            setUploadError(`Error: ${(error as Error).message}`);
+                                                                            setTransferImage(null);
+                                                                        }
+                                                                        setIsUploading(false);
+                                                                    }
+                                                                }}
+                                                                className="hidden"
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => fileInputRef.current?.click()}
+                                                                disabled={isUploading}
+                                                                className={`w-full p-3 rounded-lg border border-dashed flex items-center justify-center gap-2 transition-all ${isUploading
+                                                                    ? 'bg-gray-100 border-gray-300 text-gray-500 cursor-wait'
+                                                                    : uploadedImageUrl
+                                                                        ? 'bg-green-50 border-green-500 text-green-600'
+                                                                        : formErrors.transferImage
+                                                                            ? 'bg-red-50 border-red-500 text-red-500'
+                                                                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hover:border-primary'
+                                                                    }`}
+                                                            >
+                                                                {isUploading ? (
+                                                                    <>
+                                                                        <div className="w-4 h-4 border-2 border-gray-400/30 border-t-gray-400 rounded-full animate-spin" />
+                                                                        <span>Subiendo...</span>
+                                                                    </>
+                                                                ) : uploadedImageUrl ? (
+                                                                    <>
+                                                                        <span className="truncate max-w-[200px]">{transferImage?.name || 'Comprobante'}</span>
+                                                                        <span className="text-xs bg-green-500/20 px-2 py-0.5 rounded text-green-400">✓ Subido - Cambiar</span>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <Plus size={16} />
+                                                                        <span>Subir Comprobante</span>
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                            {formErrors.transferImage && (
+                                                                <p className="text-red-500 text-xs mt-1">{formErrors.transferImage}</p>
+                                                            )}
+                                                            {uploadError && (
+                                                                <p className="text-red-500 text-xs mt-1 font-bold">{uploadError}</p>
+                                                            )}
                                                         </div>
                                                     </div>
-
-                                                    {/* Bank account info */}
-                                                    {customer?.selectedBank && (
-                                                        <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm">
-                                                            <p className="text-gray-900 font-bold mb-2">Datos de {customer.selectedBank}:</p>
-                                                            {customer.selectedBank === 'BAC' && (
-                                                                <>
-                                                                    <div className="flex items-center justify-between mb-1">
-                                                                        <p className="text-gray-700 flex-1">Cuenta: <span className="font-mono font-bold">000000000</span></p>
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                navigator.clipboard.writeText('000000000');
-                                                                                setCopiedAccount('BAC');
-                                                                                setTimeout(() => setCopiedAccount(null), 2000);
-                                                                            }}
-                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'BAC' ? 'bg-green-600 text-white' : 'bg-primary hover:bg-primary/80 text-white'}`}
-                                                                        >
-                                                                            {copiedAccount === 'BAC' ? '¡Copiado!' : 'Copiar'}
-                                                                        </button>
-                                                                    </div>
-                                                                    <p className="text-gray-700">Titular: Nombre de Ejemplo</p>
-                                                                    <p className="text-gray-500 text-xs">ID: 0000000000000</p>
-                                                                </>
-                                                            )}
-                                                            {customer.selectedBank === 'FICOHSA' && (
-                                                                <>
-                                                                    <div className="flex items-center justify-between mb-1">
-                                                                        <p className="text-gray-700 flex-1">Cuenta: <span className="font-mono font-bold">000000000</span></p>
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                navigator.clipboard.writeText('000000000');
-                                                                                setCopiedAccount('FICOHSA');
-                                                                                setTimeout(() => setCopiedAccount(null), 2000);
-                                                                            }}
-                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'FICOHSA' ? 'bg-green-600 text-white' : 'bg-primary hover:bg-primary/80 text-white'}`}
-                                                                        >
-                                                                            {copiedAccount === 'FICOHSA' ? '¡Copiado!' : 'Copiar'}
-                                                                        </button>
-                                                                    </div>
-                                                                    <p className="text-gray-700">Titular: Nombre de Ejemplo</p>
-                                                                    <p className="text-gray-500 text-xs">ID: 0000000000000</p>
-                                                                </>
-                                                            )}
-                                                            {customer.selectedBank === 'BANPAIS' && (
-                                                                <>
-                                                                    <div className="flex items-center justify-between mb-1">
-                                                                        <p className="text-gray-700 flex-1">Cuenta: <span className="font-mono font-bold">000000000</span></p>
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                navigator.clipboard.writeText('000000000');
-                                                                                setCopiedAccount('BANPAIS');
-                                                                                setTimeout(() => setCopiedAccount(null), 2000);
-                                                                            }}
-                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'BANPAIS' ? 'bg-green-600 text-white' : 'bg-primary hover:bg-primary/80 text-white'}`}
-                                                                        >
-                                                                            {copiedAccount === 'BANPAIS' ? '¡Copiado!' : 'Copiar'}
-                                                                        </button>
-                                                                    </div>
-                                                                    <p className="text-gray-700">Titular: Nombre de Ejemplo</p>
-                                                                    <p className="text-gray-500 text-xs">ID: 0000000000000</p>
-                                                                </>
-                                                            )}
-                                                            {customer.selectedBank === 'ATLANTIDA' && (
-                                                                <>
-                                                                    <div className="flex items-center justify-between mb-1">
-                                                                        <p className="text-gray-700 flex-1">Cuenta: <span className="font-mono font-bold">000000000</span></p>
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                navigator.clipboard.writeText('000000000');
-                                                                                setCopiedAccount('ATLANTIDA');
-                                                                                setTimeout(() => setCopiedAccount(null), 2000);
-                                                                            }}
-                                                                            className={`text-xs px-2 py-1 rounded transition-colors ${copiedAccount === 'ATLANTIDA' ? 'bg-green-600 text-white' : 'bg-primary hover:bg-primary/80 text-white'}`}
-                                                                        >
-                                                                            {copiedAccount === 'ATLANTIDA' ? '¡Copiado!' : 'Copiar'}
-                                                                        </button>
-                                                                    </div>
-                                                                    <p className="text-gray-700">Titular: Nombre de Ejemplo</p>
-                                                                    <p className="text-gray-500 text-xs">ID: 0000000000000</p>
-                                                                </>
-                                                            )}
-
-                                                            <div className="mt-4 pt-4 border-t border-gray-200">
-                                                                <label className="block text-xs font-bold text-gray-700 mb-2 uppercase">
-                                                                    Comprobante de Transferencia *
-                                                                </label>
-                                                                <input
-                                                                    ref={fileInputRef}
-                                                                    type="file"
-                                                                    accept="image/*"
-                                                                    onChange={async (e) => {
-                                                                        if (e.target.files && e.target.files[0]) {
-                                                                            const file = e.target.files[0];
-                                                                            setTransferImage(file);
-                                                                            setFormErrors(prev => ({ ...prev, transferImage: undefined }));
-                                                                            setUploadError(null);
-                                                                            setUploadedImageUrl('');
-
-                                                                            // Upload immediately
-                                                                            setIsUploading(true);
-                                                                            try {
-                                                                                const compressedImage = await compressImage(file);
-                                                                                // Generate unique filename to prevent conflicts
-                                                                                const timestamp = Date.now();
-                                                                                const uniqueName = `${timestamp}-${compressedImage.name}`;
-                                                                                const blob = await upload(uniqueName, compressedImage, {
-                                                                                    access: 'public',
-                                                                                    handleUploadUrl: '/api/upload',
-                                                                                });
-                                                                                setUploadedImageUrl(blob.url);
-                                                                                console.log('Image uploaded successfully:', blob.url);
-                                                                            } catch (error) {
-                                                                                console.error('Error uploading image:', error);
-                                                                                setUploadError(`Error: ${(error as Error).message}`);
-                                                                                setTransferImage(null);
-                                                                            }
-                                                                            setIsUploading(false);
-                                                                        }
-                                                                    }}
-                                                                    className="hidden"
-                                                                />
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => fileInputRef.current?.click()}
-                                                                    disabled={isUploading}
-                                                                    className={`w-full p-3 rounded-lg border border-dashed flex items-center justify-center gap-2 transition-all ${isUploading
-                                                                        ? 'bg-gray-100 border-gray-300 text-gray-500 cursor-wait'
-                                                                        : uploadedImageUrl
-                                                                            ? 'bg-green-50 border-green-500 text-green-600'
-                                                                            : formErrors.transferImage
-                                                                                ? 'bg-red-50 border-red-500 text-red-500'
-                                                                                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hover:border-primary'
-                                                                        }`}
-                                                                >
-                                                                    {isUploading ? (
-                                                                        <>
-                                                                            <div className="w-4 h-4 border-2 border-gray-400/30 border-t-gray-400 rounded-full animate-spin" />
-                                                                            <span>Subiendo...</span>
-                                                                        </>
-                                                                    ) : uploadedImageUrl ? (
-                                                                        <>
-                                                                            <span className="truncate max-w-[200px]">{transferImage?.name || 'Comprobante'}</span>
-                                                                            <span className="text-xs bg-green-500/20 px-2 py-0.5 rounded text-green-400">✓ Subido - Cambiar</span>
-                                                                        </>
-                                                                    ) : (
-                                                                        <>
-                                                                            <Plus size={16} />
-                                                                            <span>Subir Comprobante</span>
-                                                                        </>
-                                                                    )}
-                                                                </button>
-                                                                {formErrors.transferImage && (
-                                                                    <p className="text-red-500 text-xs mt-1">{formErrors.transferImage}</p>
-                                                                )}
-                                                                {uploadError && (
-                                                                    <p className="text-red-500 text-xs mt-1 font-bold">{uploadError}</p>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    )}
                                                 </div>
                                             )}
 
@@ -817,7 +687,9 @@ export default function CartModal({ settings }: { settings?: any }) {
                         )}
                     </motion.div>
                 </>
-            )}
-        </AnimatePresence>
+            )
+            }
+        </AnimatePresence >
     );
 }
+

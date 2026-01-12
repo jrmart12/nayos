@@ -22,9 +22,9 @@ export interface CustomerInfo {
     address?: string;
     notes?: string;
     deliveryCoords?: { lat: number; lng: number };
-    paymentMethod?: 'cash' | 'transfer' | 'bac_compra_click';
-    cashChange?: string;
-    selectedBank?: 'BAC' | 'FICOHSA' | 'BANPAIS' | 'ATLANTIDA';
+    paymentMethod?: 'transfer' | 'bac_compra_click';
+    cashChange?: never; // Removed
+    selectedBank?: 'BAC'; // Restrict to BAC only based on request
 }
 
 interface CartContextType {
