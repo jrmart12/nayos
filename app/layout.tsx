@@ -106,9 +106,9 @@ export default async function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground min-h-[100dvh]`}
+        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground min-h-screen`}
       >
-        <div className="fixed w-full h-[100dvh] top-0 left-0 z-[-1]">
+        <div className="fixed inset-0 z-[-1]">
           <Image
             src="/sand-beige.jpg"
             alt="Background"
