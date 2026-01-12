@@ -52,41 +52,41 @@ export default async function Home() {
   const displayTestimonials = (testimonials && testimonials.length > 0) ? testimonials : placeholderTestimonials;
 
   return (
-    <div className="min-h-screen relative" style={{ backgroundImage: 'url(/sand-beige.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <div className="min-h-screen relative">
       <Navbar settings={settings} />
       <main className="relative z-10">
-          {/* Hero Section */}
-          <FadeInUp>
-            <Hero data={hero} />
-          </FadeInUp>
+        {/* Hero Section */}
+        <FadeInUp>
+          <Hero data={hero} />
+        </FadeInUp>
 
-          {/* Featured Burgers Showcase */}
-          <FadeInUp delay={0.1}>
-            <FeaturedBurgers products={bestSellers} />
-          </FadeInUp>
+        {/* Featured Burgers Showcase */}
+        <FadeInUp delay={0.1}>
+          <FeaturedBurgers products={bestSellers} />
+        </FadeInUp>
 
-          {/* Video Showcase */}
-          <FadeInUp delay={0.1}>
-            <VideoShowcase />
-          </FadeInUp>
+        {/* Video Showcase */}
+        <FadeInUp delay={0.1}>
+          <VideoShowcase />
+        </FadeInUp>
 
-          {/* Philosophy Section */}
-          <FadeInUp delay={0.1}>
-            <Philosophy />
-          </FadeInUp>
+        {/* Philosophy Section */}
+        <FadeInUp delay={0.1}>
+          <Philosophy />
+        </FadeInUp>
 
-          {/* About Section (if you want to keep original about) */}
-          {about && (
-            <FadeInUp delay={0.1}>
-              <About data={about} />
-            </FadeInUp>
-          )}
-          {/* Delivery Section with WhatsApp */}
+        {/* About Section (if you want to keep original about) */}
+        {about && (
           <FadeInUp delay={0.1}>
-            <DeliverySection delivery={settings?.delivery} phone={settings?.phone} logo={settings?.logo} />
+            <About data={about} />
           </FadeInUp>
-        </main>
-        <Footer settings={settings} />
+        )}
+        {/* Delivery Section with WhatsApp */}
+        <FadeInUp delay={0.1}>
+          <DeliverySection delivery={settings?.delivery} phone={settings?.phone} logo={settings?.logo} />
+        </FadeInUp>
+      </main>
+      <Footer settings={settings} />
     </div>
   )
 }

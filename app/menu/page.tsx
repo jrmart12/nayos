@@ -27,7 +27,7 @@ export default async function ProductsPage() {
     ])
 
     return (
-        <div className="min-h-screen relative" style={{ backgroundImage: 'url(/sand-beige.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="min-h-screen relative">
             <Navbar settings={settings} />
             <main className="pt-28 pb-16 relative z-10">
                 {/* Header */}

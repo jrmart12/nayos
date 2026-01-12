@@ -108,6 +108,16 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased bg-background text-foreground`}
       >
+        <div className="fixed inset-0 z-[-1]">
+          <Image
+            src="/sand-beige.jpg"
+            alt="Background"
+            fill
+            className="object-cover"
+            quality={100}
+            priority
+          />
+        </div>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
