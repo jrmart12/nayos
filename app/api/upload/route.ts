@@ -19,21 +19,7 @@ export async function POST(request: Request): Promise<NextResponse> {
                     }),
                 };
             },
-            onUploadCompleted: async ({ blob, tokenPayload }) => {
-                // Get notified of client upload completion
-                // ⚠️ This will not work on `localhost` websites,
-                // Use ngrok or similar to get the full upload flow
 
-                console.log('blob upload completed', blob, tokenPayload);
-
-                try {
-                    // Run any logic after the file upload completed
-                    // const { userId } = JSON.parse(tokenPayload);
-                    // await db.update({ avatar: blob.url, userId });
-                } catch (error) {
-                    throw new Error('Could not update user');
-                }
-            },
         });
 
         return NextResponse.json(jsonResponse);

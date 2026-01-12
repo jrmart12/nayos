@@ -1,21 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/cron/cleanup-blobs",
+      "path": "/api/cron/keep-alive",
       "schedule": "0 2 * * *"
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.housekitchenhn.com"
-        }
-      ],
-      "destination": "https://housekitchenhn.com/:path*",
-      "permanent": true
     }
   ],
   "headers": [
