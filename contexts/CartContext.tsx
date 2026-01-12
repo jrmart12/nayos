@@ -12,7 +12,7 @@ export interface CartItem {
     slug?: { current: string } | string;
     unit?: string;
     cutWeight?: string;
-    selectedOptions?: Record<string, string[]>;
+    selectedOptions?: Record<string, Array<{ label: string; quantity: number }>>;
     specialInstructions?: string;
 }
 

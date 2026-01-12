@@ -149,7 +149,11 @@ export default function CartModal({ settings }: { settings?: any }) {
 
             if (item.selectedOptions && Object.keys(item.selectedOptions).length > 0) {
                 Object.entries(item.selectedOptions).forEach(([optionName, choices]) => {
-                    message += `  ${optionName}: ${(choices as string[]).join(', ')}\n`;
+                    const choicesArray = choices as Array<{ label: string; quantity: number }>;
+                    const formattedChoices = choicesArray.map(c => 
+                        c.quantity > 1 ? `${c.label} x${c.quantity}` : c.label
+                    ).join(', ');
+                    message += `  ${optionName}: ${formattedChoices}\n`;
                 });
             }
 
@@ -174,7 +178,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                 // Always BAC
                 message += `Banco: BAC\n\n`;
                 message += `*Cuenta BAC:* 750490481\n`;
-                message += `Titular: Nayos\n`;
+                message += `Titular: Samara Brunch and Cake S DE RL\n`;
             } else if (customer.paymentMethod === 'bac_compra_click') {
                 message += `Pago con Tarjeta\n`;
                 message += `(Por favor generar link de pago)\n`;
@@ -306,12 +310,18 @@ export default function CartModal({ settings }: { settings?: any }) {
 
                                                     {item.selectedOptions && Object.keys(item.selectedOptions).length > 0 && (
                                                         <div className="mt-2 space-y-1">
-                                                            {Object.entries(item.selectedOptions).map(([optionName, choices]) => (
-                                                                <div key={optionName} className="text-xs">
-                                                                    <span className="font-bold text-gray-700">{optionName}:</span>
-                                                                    <span className="text-gray-600 ml-1">{(choices as string[]).join(', ')}</span>
-                                                                </div>
-                                                            ))}
+                                                            {Object.entries(item.selectedOptions).map(([optionName, choices]) => {
+                                                                const choicesArray = choices as Array<{ label: string; quantity: number }>;
+                                                                const formattedChoices = choicesArray.map(c => 
+                                                                    c.quantity > 1 ? `${c.label} x${c.quantity}` : c.label
+                                                                ).join(', ');
+                                                                return (
+                                                                    <div key={optionName} className="text-xs">
+                                                                        <span className="font-bold text-gray-700">{optionName}:</span>
+                                                                        <span className="text-gray-600 ml-1">{formattedChoices}</span>
+                                                                    </div>
+                                                                );
+                                                            })}
                                                         </div>
                                                     )}
 
@@ -518,7 +528,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                                 {copiedAccount === 'BAC' ? '¡Copiado!' : 'Copiar'}
                                                             </button>
                                                         </div>
-                                                        <p className="text-gray-700">Titular: Nayos</p>
+                                                        <p className="text-gray-700">Titular: Samara Brunch and Cake S DE RL</p>
 
                                                         <div className="mt-4 pt-4 border-t border-gray-200">
                                                             <label className="block text-xs font-bold text-gray-700 mb-2 uppercase">

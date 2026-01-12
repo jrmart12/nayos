@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useCart } from '@/contexts/CartContext'
 import { SanityImageSource } from '@sanity/image-url/lib/types/types'
-import { ChevronDown, ChevronUp, Check, Edit2 } from 'lucide-react'
+import { ChevronDown, ChevronUp, Check, Edit2, Plus, Minus } from 'lucide-react'
 
 interface ProductCut {
     weight: string
@@ -36,7 +36,7 @@ interface ProductCutSelectorProps {
 export default function ProductCutSelector({ product }: ProductCutSelectorProps) {
     const { addToCart } = useCart()
     const [selectedCut, setSelectedCut] = useState<ProductCut | null>(null)
-    const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>({})
+    const [selectedOptions, setSelectedOptions] = useState<Record<string, Array<{ label: string; quantity: number }>>>({})
     const [specialInstructions, setSpecialInstructions] = useState('')
     const [expandedOption, setExpandedOption] = useState<number | null>(null)
 
@@ -50,7 +50,8 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
             const firstIncomplete = product.options!.findIndex((option, idx) => {
                 if (option.required) {
                     const selections = selectedOptions[option.name] || []
-                    return selections.length === 0
+                    const totalQuantity = selections.reduce((sum, item) => sum + item.quantity, 0)
+                    return totalQuantity === 0
                 }
                 return false
             })
@@ -78,60 +79,100 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
 
     const isOptionComplete = (optionName: string, required: boolean): boolean => {
         const selections = selectedOptions[optionName] || []
-        return selections.length > 0
+        const totalQuantity = selections.reduce((sum, item) => sum + item.quantity, 0)
+        return totalQuantity > 0
     }
 
-    const handleOptionChange = (optionName: string, choiceLabel: string, isMultiple: boolean, optionIdx: number) => {
+    const getOptionQuantity = (optionName: string, choiceLabel: string): number => {
+        const selections = selectedOptions[optionName] || []
+        const item = selections.find(s => s.label === choiceLabel)
+        return item ? item.quantity : 0
+    }
+
+    const handleOptionChange = (optionName: string, choiceLabel: string, isMultiple: boolean, optionIdx: number, delta: number) => {
         setSelectedOptions(prev => {
-            let updated: Record<string, string[]>
+            let updated: Record<string, Array<{ label: string; quantity: number }>>
+            
             if (isMultiple) {
                 const current = prev[optionName] || []
-                const isAdding = !current.includes(choiceLabel)
-
-                // Check sauce limit for wings/boneless
-                if (isAdding && (product.name.toLowerCase().includes('alitas') || product.name.toLowerCase().includes('boneless'))) {
-                    // Check if this option is likely the sauce option
-                    if (optionName.toLowerCase().includes('salsa') || optionName.toLowerCase().includes('sabor')) {
-                        if (selectedCut) {
-                            const match = selectedCut.weight.match(/\d+/);
-                            if (match) {
-                                const quantity = parseInt(match[0], 10);
-                                const maxSauces = Math.max(1, Math.floor(quantity / 6));
-
-                                if (current.length >= maxSauces) {
-                                    alert(`Para ${selectedCut.weight}, solo puedes elegir hasta ${maxSauces} salsa${maxSauces > 1 ? 's' : ''}.`);
-                                    return prev;
+                const existingIndex = current.findIndex(item => item.label === choiceLabel)
+                
+                if (existingIndex >= 0) {
+                    const newQuantity = current[existingIndex].quantity + delta
+                    
+                    // Check sauce limit for wings/boneless
+                    if (delta > 0 && (product.name.toLowerCase().includes('alitas') || product.name.toLowerCase().includes('boneless'))) {
+                        if (optionName.toLowerCase().includes('salsa') || optionName.toLowerCase().includes('sabor')) {
+                            if (selectedCut) {
+                                const match = selectedCut.weight.match(/\d+/);
+                                if (match) {
+                                    const quantity = parseInt(match[0], 10);
+                                    const maxSauces = Math.max(1, Math.floor(quantity / 6));
+                                    const totalSauces = current.reduce((sum, item) => sum + item.quantity, 0)
+                                    
+                                    if (totalSauces >= maxSauces) {
+                                        alert(`Para ${selectedCut.weight}, solo puedes elegir hasta ${maxSauces} salsa${maxSauces > 1 ? 's' : ''}.`);
+                                        return prev;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-
-                const newSelections = current.includes(choiceLabel)
-                    ? current.filter(c => c !== choiceLabel)
-                    : [...current, choiceLabel]
-                updated = { ...prev, [optionName]: newSelections }
-            } else {
-                updated = { ...prev, [optionName]: [choiceLabel] }
-
-                // Auto-collapse and open next if single-select required option
-                const currentOption = product.options![optionIdx]
-                if (currentOption.required && !isMultiple) {
-                    setTimeout(() => {
-                        setExpandedOption(null)
-                        // Find next incomplete required option
-                        const nextIncomplete = product.options!.findIndex((opt, idx) => {
-                            if (idx <= optionIdx) return false
-                            if (opt.required) {
-                                const sels = updated[opt.name] || []
-                                return sels.length === 0
-                            }
-                            return false
-                        })
-                        if (nextIncomplete !== -1) {
-                            setTimeout(() => setExpandedOption(nextIncomplete), 100)
+                    
+                    if (newQuantity <= 0) {
+                        // Remove item if quantity is 0
+                        updated = {
+                            ...prev,
+                            [optionName]: current.filter((_, idx) => idx !== existingIndex)
                         }
-                    }, 300)
+                    } else {
+                        // Update quantity
+                        updated = {
+                            ...prev,
+                            [optionName]: current.map((item, idx) =>
+                                idx === existingIndex ? { ...item, quantity: newQuantity } : item
+                            )
+                        }
+                    }
+                } else if (delta > 0) {
+                    // Add new item
+                    updated = {
+                        ...prev,
+                        [optionName]: [...current, { label: choiceLabel, quantity: 1 }]
+                    }
+                } else {
+                    return prev
+                }
+            } else {
+                // Single select - just toggle
+                const current = prev[optionName] || []
+                const hasItem = current.some(item => item.label === choiceLabel)
+                
+                if (hasItem) {
+                    updated = { ...prev, [optionName]: [] }
+                } else {
+                    updated = { ...prev, [optionName]: [{ label: choiceLabel, quantity: 1 }] }
+
+                    // Auto-collapse and open next if single-select required option
+                    const currentOption = product.options![optionIdx]
+                    if (currentOption.required && !isMultiple) {
+                        setTimeout(() => {
+                            setExpandedOption(null)
+                            // Find next incomplete required option
+                            const nextIncomplete = product.options!.findIndex((opt, idx) => {
+                                if (idx <= optionIdx) return false
+                                if (opt.required) {
+                                    const sels = updated[opt.name] || []
+                                    const totalQty = sels.reduce((sum, item) => sum + item.quantity, 0)
+                                    return totalQty === 0
+                                }
+                                return false
+                            })
+                            if (nextIncomplete !== -1) {
+                                setTimeout(() => setExpandedOption(nextIncomplete), 100)
+                            }
+                        }, 300)
+                    }
                 }
             }
             return updated
@@ -151,10 +192,10 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
         if (hasOptions) {
             product.options!.forEach(option => {
                 const selections = selectedOptions[option.name] || []
-                selections.forEach(selectedLabel => {
-                    const choice = option.choices.find(c => c.label === selectedLabel)
+                selections.forEach(selectedItem => {
+                    const choice = option.choices.find(c => c.label === selectedItem.label)
                     if (choice) {
-                        extraPrice += choice.extraPrice
+                        extraPrice += choice.extraPrice * selectedItem.quantity
                     }
                 })
             })
@@ -286,7 +327,7 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
                                 </div>
                                 {!isExpanded && isComplete && (
                                     <p className="text-sm text-gray-700 mt-2 font-bold">
-                                        {selections.join(', ')}
+                                        {selections.map(s => `${s.label}${s.quantity > 1 ? ` x${s.quantity}` : ''}`).join(', ')}
                                     </p>
                                 )}
                                 {/* Show limit hint for sauces */}
@@ -309,32 +350,85 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
                         {/* Choices - Collapsible */}
                         {isExpanded && (
                             <div className="p-4 pt-0 space-y-3 max-h-96 overflow-y-auto bg-gray-50">
-                                {option.choices.map((choice, choiceIdx) => (
-                                    <label
-                                        key={choiceIdx}
-                                        className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                                            selections.includes(choice.label)
-                                                ? 'bg-[#9B292C] border-[#9B292C] shadow-lg'
-                                                : 'bg-white border-gray-300 hover:border-[#9B292C] hover:shadow-md'
-                                        }`}
-                                    >
-                                        <input
-                                            type={option.multiple ? "checkbox" : "radio"}
-                                            name={option.name}
-                                            checked={selections.includes(choice.label)}
-                                            onChange={() => handleOptionChange(option.name, choice.label, option.multiple, idx)}
-                                            className="w-5 h-5 accent-[#9B292C]"
-                                        />
-                                        <span className={`flex-1 font-bold uppercase tracking-wide text-sm ${
-                                            selections.includes(choice.label) ? 'text-white' : 'text-gray-800'
-                                        }`}>{choice.label}</span>
-                                        {choice.extraPrice > 0 && (
-                                            <span className={`font-black text-sm ${
-                                                selections.includes(choice.label) ? 'text-white' : 'text-[#9B292C]'
-                                            }`}>+L{choice.extraPrice.toFixed(0)}</span>
-                                        )}
-                                    </label>
-                                ))}
+                                {option.choices.map((choice, choiceIdx) => {
+                                    const quantity = getOptionQuantity(option.name, choice.label)
+                                    const isSelected = quantity > 0
+                                    
+                                    return (
+                                        <div
+                                            key={choiceIdx}
+                                            className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
+                                                isSelected
+                                                    ? 'bg-[#9B292C] border-[#9B292C] shadow-lg'
+                                                    : 'bg-white border-gray-300 hover:border-[#9B292C] hover:shadow-md'
+                                            }`}
+                                        >
+                                            {option.multiple ? (
+                                                <>
+                                                    {/* Quantity controls for multiple select */}
+                                                    <div className="flex items-center gap-2">
+                                                        <button
+                                                            onClick={() => handleOptionChange(option.name, choice.label, option.multiple, idx, -1)}
+                                                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                                                                isSelected
+                                                                    ? 'bg-white text-[#9B292C] hover:bg-gray-100'
+                                                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                                            }`}
+                                                            disabled={!isSelected}
+                                                        >
+                                                            <Minus size={16} strokeWidth={3} />
+                                                        </button>
+                                                        <span className={`w-8 text-center font-black text-lg ${
+                                                            isSelected ? 'text-white' : 'text-gray-800'
+                                                        }`}>
+                                                            {quantity}
+                                                        </span>
+                                                        <button
+                                                            onClick={() => handleOptionChange(option.name, choice.label, option.multiple, idx, 1)}
+                                                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                                                                isSelected
+                                                                    ? 'bg-white text-[#9B292C] hover:bg-gray-100'
+                                                                    : 'bg-[#9B292C] text-white hover:bg-[#7A2123]'
+                                                            }`}
+                                                        >
+                                                            <Plus size={16} strokeWidth={3} />
+                                                        </button>
+                                                    </div>
+                                                    <span className={`flex-1 font-bold uppercase tracking-wide text-sm ${
+                                                        isSelected ? 'text-white' : 'text-gray-800'
+                                                    }`}>{choice.label}</span>
+                                                    {choice.extraPrice > 0 && (
+                                                        <span className={`font-black text-sm ${
+                                                            isSelected ? 'text-white' : 'text-[#9B292C]'
+                                                        }`}>
+                                                            +L{choice.extraPrice.toFixed(0)}
+                                                            {quantity > 1 && ` (x${quantity})`}
+                                                        </span>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {/* Radio button for single select */}
+                                                    <input
+                                                        type="radio"
+                                                        name={option.name}
+                                                        checked={isSelected}
+                                                        onChange={() => handleOptionChange(option.name, choice.label, option.multiple, idx, 1)}
+                                                        className="w-5 h-5 accent-[#9B292C]"
+                                                    />
+                                                    <span className={`flex-1 font-bold uppercase tracking-wide text-sm ${
+                                                        isSelected ? 'text-white' : 'text-gray-800'
+                                                    }`}>{choice.label}</span>
+                                                    {choice.extraPrice > 0 && (
+                                                        <span className={`font-black text-sm ${
+                                                            isSelected ? 'text-white' : 'text-[#9B292C]'
+                                                        }`}>+L{choice.extraPrice.toFixed(0)}</span>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+                                    )
+                                })}
                             </div>
                         )}
                     </div>
