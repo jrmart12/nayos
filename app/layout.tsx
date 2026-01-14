@@ -107,10 +107,23 @@ export default async function RootLayout({
   return (
     <html lang="es" style={{ height: '100%' }}>
       <body
-        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground bg-[#fff8f0]`}
+        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground`}
         style={{ minHeight: '-webkit-fill-available' }}
       >
-        <div className="fixed inset-0 z-[-1]" style={{ bottom: 'env(safe-area-inset-bottom, 0)' }}>
+        <div 
+          className="fixed z-[-1]" 
+          style={{ 
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            marginTop: 'calc(-1 * env(safe-area-inset-top, 0))',
+            marginBottom: 'calc(-1 * env(safe-area-inset-bottom, 0))',
+            paddingTop: 'env(safe-area-inset-top, 0)',
+            paddingBottom: 'env(safe-area-inset-bottom, 0)',
+            height: 'calc(100vh + env(safe-area-inset-top, 0) + env(safe-area-inset-bottom, 0))'
+          }}
+        >
           <Image
             src="/sand-beige.jpg"
             alt="Background"
@@ -118,6 +131,7 @@ export default async function RootLayout({
             className="object-cover"
             quality={100}
             priority
+            sizes="100vw"
           />
         </div>
         <script
