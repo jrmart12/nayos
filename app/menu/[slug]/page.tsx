@@ -136,7 +136,7 @@ export async function generateMetadata(
         openGraph: {
             title: `${product.name}${priceText} | Nayos Burgers`,
             description: description,
-            url: `https://nayosburgers.com/menu/${slug}`,
+            url: `https://nayosburger.com/menu/${slug}`,
             siteName: 'Nayos Burgers',
             images: [{
                 url: productImage,

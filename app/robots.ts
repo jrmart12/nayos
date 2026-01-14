@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/api/', '/studio/'],
         },
-        sitemap: 'https://nayosburgers.com/sitemap.xml',
+        sitemap: 'https://nayosburger.com/sitemap.xml',
     }
 }

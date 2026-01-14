@@ -31,7 +31,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://nayosburgers.com'),
+  metadataBase: new URL('https://nayosburger.com'),
   title: {
     default: "Nayos | Las Mejores Smash'd Burgers de La Ceiba",
     template: "%s | Nayos Burgers"
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   keywords: ["Nayos", "Hamburguesas", "Burgers", "La Ceiba", "Honduras", "Comida a Domicilio", "Restaurante"],
   authors: [{ name: "Nayos" }],
   alternates: {
-    canonical: 'https://nayosburgers.com',
+    canonical: 'https://nayosburger.com',
   },
   openGraph: {
     title: "Nayos | Las Mejores Smash'd Burgers de La Ceiba",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     }],
     locale: "es_HN",
     type: "website",
-    url: 'https://nayosburgers.com',
+    url: 'https://nayosburger.com',
   },
   twitter: {
     card: "summary",
@@ -126,9 +126,9 @@ export default async function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Nayos Burgers",
-              url: "https://nayosburgers.com",
-              logo: "https://nayosburgers.com/web-app-manifest-512x512.png",
-              image: "https://nayosburgers.com/web-app-manifest-512x512.png",
+              url: "https://nayosburger.com",
+              logo: "https://nayosburger.com/web-app-manifest-512x512.png",
+              image: "https://nayosburger.com/web-app-manifest-512x512.png",
               sameAs: [
                 "https://www.facebook.com/nayosburgers",
                 "https://www.instagram.com/nayosburgers"
@@ -143,10 +143,10 @@ export default async function RootLayout({
               "@context": "https://schema.org",
               "@type": "Restaurant",
               name: "Nayos Burgers",
-              image: "https://nayosburgers.com/web-app-manifest-512x512.png",
-              logo: "https://nayosburgers.com/web-app-manifest-512x512.png",
-              "@id": "https://nayosburgers.com",
-              url: "https://nayosburgers.com",
+              image: "https://nayosburger.com/web-app-manifest-512x512.png",
+              logo: "https://nayosburger.com/web-app-manifest-512x512.png",
+              "@id": "https://nayosburger.com",
+              url: "https://nayosburger.com",
               telephone: "+50495082348",
               servesCuisine: "American, Burgers",
               priceRange: "$$",
@@ -177,7 +177,7 @@ export default async function RootLayout({
                 opens: "11:00",
                 closes: "21:30",
               },
-              menu: "https://nayosburgers.com/menu",
+              menu: "https://nayosburger.com/menu",
               sameAs: [
                 "https://www.facebook.com/nayosburgers",
                 "https://www.instagram.com/nayosburgers"

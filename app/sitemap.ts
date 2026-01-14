@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import { client } from '@/lib/sanity'
 
-const BASE_URL = 'https://nayosburgers.com'
+const BASE_URL = 'https://nayosburger.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Get all products that have a slug
