@@ -57,7 +57,7 @@ interface Product {
 // Translation function for categories - Burger focused
 const translateCategory = (category: string): string => {
     const translations: Record<string, string> = {
-        'hamburguesas': 'Hamburguesas',
+        'hamburguesas': 'Burgers',
         'pollo': 'Pollo',
         'acompanamientos': 'Acompañamientos',
         'bebidas': 'Bebidas',
@@ -249,10 +249,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                                     </div>
                                 )}
 
-           
+
 
                                 {/* Price */}
-                        
+
                             </div>
                         </div>
 
@@ -330,11 +330,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                             <h2 className="text-4xl md:text-5xl font-black text-[#9B292C] mb-12 text-center uppercase tracking-tight" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>
                                 También te puede gustar
                             </h2>
-                            
+
                             <div className="space-y-12">
                                 {relatedProducts.slice(0, 3).map((relatedProduct: Product, index: number) => {
                                     const isEven = index % 2 === 0
-                                    
+
                                     return (
                                         <Link
                                             key={relatedProduct._id}

@@ -25,7 +25,7 @@ interface MenuProductsProps {
 // Category configuration
 const categoryConfig: Record<string, { icon: string; label: string; order: number }> = {
     'all': { icon: '🍽️', label: 'Todos', order: 0 },
-    'hamburguesas': { icon: '🍔', label: 'Hamburguesas', order: 1 },
+    'hamburguesas': { icon: '🍔', label: 'Burgers', order: 1 },
     'pollo': { icon: '🍗', label: 'Pollo', order: 2 },
     'combos': { icon: '🎉', label: 'Combos', order: 3 },
     'acompanamientos': { icon: '🍟', label: 'Acompañamientos', order: 4 },

@@ -23,7 +23,7 @@ const caveat = Caveat({
 });
 
 export const viewport = {
-  themeColor: '#FFFFFF',
+  themeColor: '#fff8f0',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -107,7 +107,7 @@ export default async function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground min-h-screen`}
+        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground min-h-screen bg-[#fff8f0]`}
       >
         <div className="fixed w-full h-[100dvh] top-0 left-0 z-[-1]">
           <Image

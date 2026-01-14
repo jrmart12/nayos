@@ -37,7 +37,7 @@ const categoryIcons: Record<string, string> = {
 // Translation function for categories - Burger categories
 const translateCategory = (category: string): string => {
     const translations: Record<string, string> = {
-        'hamburguesas': 'Hamburguesas',
+        'hamburguesas': 'Burgers',
         'pollo': 'Pollo',
         'acompanamientos': 'Acompañamientos',
         'bebidas': 'Bebidas',

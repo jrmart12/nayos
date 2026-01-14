@@ -7,7 +7,7 @@ import DottedLine from "./DottedLine";
 
 export default function Philosophy() {
     return (
-        <section className="py-20 bg-transparent relative overflow-hidden">
+        <section id="about" className="py-20 bg-transparent relative overflow-hidden">
             {/* Top Left Checkered Pattern */}
             <div className="hidden md:block absolute top-0 left-0 w-64 md:w-96 opacity-80 z-0">
                 <CheckeredPattern className="w-full h-auto" />

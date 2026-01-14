@@ -75,12 +75,6 @@ export default async function Home() {
           <Philosophy />
         </FadeInUp>
 
-        {/* About Section (if you want to keep original about) */}
-        {about && (
-          <FadeInUp delay={0.1}>
-            <About data={about} />
-          </FadeInUp>
-        )}
         {/* Delivery Section with WhatsApp */}
         <FadeInUp delay={0.1}>
           <DeliverySection delivery={settings?.delivery} phone={settings?.phone} logo={settings?.logo} />
