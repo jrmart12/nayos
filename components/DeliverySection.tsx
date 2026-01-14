@@ -48,7 +48,7 @@ export default function DeliverySection({ delivery, phone, logo }: DeliverySecti
                 <div className="max-w-7xl mx-auto">
                     {/* Title Section */}
                     <div className="text-center mb-12">
-                        <div className="inline-block bg-white border-4 border-[#9B292C] rounded-2xl px-8 py-4 relative z-20">
+                        <div className="inline-block bg-white border-4 border-[#9B292C] rounded-2xl px-8 py-4">
                             <h2 className="text-3xl md:text-5xl font-black text-[#9B292C] uppercase tracking-tight">
                                 Envíos a Domicilio
                             </h2>
@@ -59,7 +59,7 @@ export default function DeliverySection({ delivery, phone, logo }: DeliverySecti
                         {/* Left - Info */}
                         <div className="space-y-6">
                             {/* Main Info Card */}
-                            <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6 relative z-20">
+                            <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6">
                                 <h3 className="text-2xl md:text-3xl text-[#9B292C] font-black mb-4 uppercase">
                                     ¡Recibe tus burgers frescos en tu puerta!
                                 </h3>
@@ -69,7 +69,7 @@ export default function DeliverySection({ delivery, phone, logo }: DeliverySecti
                             </div>
 
                             {/* Features List */}
-                            <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6 relative z-20">
+                            <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6">
                                 <h4 className="text-lg font-black text-[#9B292C] mb-4 uppercase">¿Por qué elegir Nayos?</h4>
                                 <ul className="space-y-3">
                                     <li className="flex items-start gap-3">

@@ -107,7 +107,7 @@ export default async function RootLayout({
   return (
     <html lang="es" style={{ height: '100%' }}>
       <body
-        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground`}
+        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground bg-[#fff8f0]`}
         style={{ minHeight: '-webkit-fill-available' }}
       >
         <div className="fixed inset-0 z-[-1]" style={{ bottom: 'env(safe-area-inset-bottom, 0)' }}>
