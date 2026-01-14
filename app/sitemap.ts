@@ -1,26 +1,31 @@
 import { MetadataRoute } from 'next'
 import { client } from '@/lib/sanity'
 
+const BASE_URL = 'https://nayosburgers.com'
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    // Get all products
-    const products = await client.fetch(`*[_type == "product"]{ slug, _updatedAt }`)
+    // Get all products that have a slug
+    const products = await client.fetch(`*[_type == "product" && defined(slug.current)]{ 
+        "slug": slug.current, 
+        _updatedAt 
+    }`)
 
     const productUrls = products.map((product: any) => ({
-        url: `https://nayosburgers.com/menu/${product.slug.current}`,
+        url: `${BASE_URL}/menu/${product.slug}`,
         lastModified: new Date(product._updatedAt),
         changeFrequency: 'weekly' as const,
-        priority: 0.7,
+        priority: 0.8,
     }))
 
     return [
         {
-            url: 'https://nayosburgers.com',
+            url: BASE_URL,
             lastModified: new Date(),
             changeFrequency: 'daily',
             priority: 1,
         },
         {
-            url: 'https://nayosburgers.com/menu',
+            url: `${BASE_URL}/menu`,
             lastModified: new Date(),
             changeFrequency: 'daily',
             priority: 0.9,
