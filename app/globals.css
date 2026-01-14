@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fff8f0;
+  --background: #F9F7F2;
   --foreground: #1A1A1A;
   --primary: #9B292C;
   --secondary: #FFFFFF;
@@ -30,12 +30,13 @@
 html {
   scroll-behavior: smooth;
   height: 100%;
-  background-color: #fff8f0;
+  background-color: transparent;
+  ;
   overscroll-behavior-y: none;
 }
 
 body {
-  background: #fff8f0;
+  background: transparent;
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
   height: 100%;
