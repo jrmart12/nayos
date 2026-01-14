@@ -105,11 +105,12 @@ export default async function RootLayout({
   const settings = await getSiteSettings();
 
   return (
-    <html lang="es">
+    <html lang="es" style={{ height: '100%' }}>
       <body
-        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground min-h-screen`}
+        className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground`}
+        style={{ minHeight: '-webkit-fill-available' }}
       >
-        <div className="fixed inset-0 z-[-1]">
+        <div className="fixed inset-0 z-[-1]" style={{ bottom: 'env(safe-area-inset-bottom, 0)' }}>
           <Image
             src="/sand-beige.jpg"
             alt="Background"

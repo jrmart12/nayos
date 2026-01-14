@@ -15,7 +15,7 @@ export default function Footer({ settings }: FooterProps) {
     const logo = settings?.logo;
 
     return (
-        <footer className="bg-[#FFF8F0] border-t border-border py-16">
+        <footer className="bg-[#FFF8F0] border-t border-border py-16 relative z-20">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
                     {/* Brand */}

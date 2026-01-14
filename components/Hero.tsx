@@ -23,7 +23,7 @@ export default function Hero({ data }: HeroProps) {
     const primaryBtnLink = data?.primaryButtonLink || "/menu";
 
     return (
-        <section className="relative min-h-[80vh] bg-transparent overflow-hidden pb-12">
+        <section className="relative min-h-[80vh] bg-transparent overflow-hidden pb-12 z-10">
 
             {/* Scrolling Marquee Text */}
             <div className="bg-[#9B292C] text-white py-4 overflow-hidden relative z-10">

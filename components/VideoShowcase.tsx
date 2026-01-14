@@ -21,7 +21,7 @@ export default function VideoShowcase() {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-12"
                 >
-                    <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6 inline-block">
+                    <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6 inline-block relative z-20">
                         <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#9B292C] uppercase tracking-tight leading-tight">
                             Así Hacemos Nuestras Burgers
                         </h2>
@@ -42,7 +42,7 @@ export default function VideoShowcase() {
                         transition={{ duration: 0.6 }}
                         className="order-2 lg:order-1"
                     >
-                        <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6">
+                        <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6 relative z-20">
                             <p className="text-base md:text-lg text-gray-900 leading-relaxed font-black uppercase">
                                 Cada burger comienza con carne 100% fresca que <span className="text-[#9B292C]">smash-eamos</span> en
                                 nuestra plancha caliente para crear esa corteza crujiente y dorada que todos amamos.
@@ -51,7 +51,7 @@ export default function VideoShowcase() {
 
                         {/* Features Icons */}
                         <div className="mt-6 space-y-4">
-                            <div className="flex items-center gap-3 bg-white border-4 border-[#9B292C] rounded-xl p-4">
+                            <div className="flex items-center gap-3 bg-white border-4 border-[#9B292C] rounded-xl p-4 relative z-20">
                                 <div className="text-4xl">🥩</div>
                                 <div>
                                     <h4 className="text-sm font-black uppercase text-[#9B292C]">100% Carne Fresca</h4>
@@ -99,21 +99,21 @@ export default function VideoShowcase() {
                         className="order-3"
                     >
                         <div className="space-y-4">
-                            <div className="flex items-center gap-3 bg-white border-4 border-[#9B292C] rounded-xl p-4">
+                            <div className="flex items-center gap-3 bg-white border-4 border-[#9B292C] rounded-xl p-4 relative z-20">
                                 <div className="text-4xl">🧀</div>
                                 <div>
                                     <h4 className="text-sm font-black uppercase text-[#9B292C]">Queso Premium</h4>
                                     <p className="text-xs text-gray-700 font-bold">Derretido perfecto</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 bg-white border-4 border-[#9B292C] rounded-xl p-4">
+                            <div className="flex items-center gap-3 bg-white border-4 border-[#9B292C] rounded-xl p-4 relative z-20">
                                 <div className="text-4xl">✨</div>
                                 <div>
                                     <h4 className="text-sm font-black uppercase text-[#9B292C]">Salsa Nayos</h4>
                                     <p className="text-xs text-gray-700 font-bold">Receta secreta</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 bg-white border-4 border-[#9B292C] rounded-xl p-4">
+                            <div className="flex items-center gap-3 bg-white border-4 border-[#9B292C] rounded-xl p-4 relative z-20">
                                 <div className="text-4xl">🔥</div>
                                 <div>
                                     <h4 className="text-sm font-black uppercase text-[#9B292C]">Smashed Perfecto</h4>

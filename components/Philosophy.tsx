@@ -20,7 +20,7 @@ export default function Philosophy() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-16 border-4 border-[#9B292C] rounded-3xl p-8 md:p-12 bg-[#FFF8F0]"
+                    className="text-center mb-16 border-4 border-[#9B292C] rounded-3xl p-8 md:p-12 bg-[#FFF8F0] relative z-20"
                 >
                     <h2 className="text-4xl md:text-6xl font-black text-[#9B292C] mb-12 uppercase tracking-tight">
                         Así lo hacemos.
@@ -93,7 +93,7 @@ export default function Philosophy() {
                     transition={{ duration: 0.6, delay: 0.4 }}
                     className="max-w-4xl mx-auto text-center mt-20"
                 >
-                    <div className="bg-[#FFF8F0] rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-[#9B292C] relative overflow-hidden">
+                    <div className="bg-[#FFF8F0] rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-[#9B292C] relative overflow-hidden z-20">
 
                         <div className="relative z-10">
                             <div className="mb-6">

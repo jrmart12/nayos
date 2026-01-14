@@ -52,9 +52,9 @@ export default async function Home() {
   const displayTestimonials = (testimonials && testimonials.length > 0) ? testimonials : placeholderTestimonials;
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0)' }}>
       <Navbar settings={settings} />
-      <main className="relative z-10">
+      <main className="relative" style={{ paddingBottom: '120px' }}>
         {/* Hero Section */}
         <FadeInUp>
           <Hero data={hero} />
