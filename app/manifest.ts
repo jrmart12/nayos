@@ -2,21 +2,21 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'House Kitchen Honduras',
-        short_name: 'House Kitchen',
-        description: 'El mejor restaurante de Alitas y Boneless en La Ceiba, Honduras.',
+        name: "Nayos - Las Mejores Smash'd Burgers de La Ceiba",
+        short_name: "Nayos",
+        description: "Las mejores Smash'd Burgers de La Ceiba, Honduras. ¡Pide a domicilio!",
         start_url: '/',
         display: 'standalone',
-        background_color: '#000000',
-        theme_color: '#000000',
+        background_color: '#fff8f0',
+        theme_color: '#9B292C',
         icons: [
             {
-                src: '/icon.png',
+                src: '/web-app-manifest-192x192.png',
                 sizes: '192x192',
                 type: 'image/png',
             },
             {
-                src: '/icon-512.png',
+                src: '/web-app-manifest-512x512.png',
                 sizes: '512x512',
                 type: 'image/png',
             },
