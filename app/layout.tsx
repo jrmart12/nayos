@@ -105,17 +105,17 @@ export default async function RootLayout({
   const settings = await getSiteSettings();
 
   return (
-    <html lang="es" style={{ height: '100%', backgroundColor: '#E8D5B7' }}>
+    <html lang="es" style={{ height: '100%', backgroundColor: '#fff8f0;' }}>
       <body
         className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground`}
-        style={{ minHeight: '100vh', backgroundColor: '#E8D5B7' }}
+        style={{ minHeight: '100vh', backgroundColor: '#fff8f0;' }}
       >
         <div 
           className="fixed top-0 left-0 right-0 bottom-0 z-[-1]" 
           style={{ 
             width: '100vw',
             height: '100vh',
-            backgroundColor: '#E8D5B7'
+            backgroundColor: '#fff8f0;'
           }}
         >
           <Image
