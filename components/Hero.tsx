@@ -81,13 +81,13 @@ export default function Hero({ data }: HeroProps) {
                             className="text-center lg:text-left"
                         >
                             {/* Logo */}
-                            <div className="mb-4 md:mb-8 flex justify-center lg:justify-start">
+                            <div className="mb-8 md:mb-8 flex justify-center lg:justify-start">
                                 <Image
                                     src="/smashed.svg"
                                     alt="Nayos Logo"
                                     width={180}
                                     height={180}
-                                    className="w-62 h-62 md:w-74 md:h-24"
+                                    className="w-62 h-30 md:w-74 md:h-24"
                                 />
                             </div>
 
