@@ -30,12 +30,10 @@
 html {
   scroll-behavior: smooth;
   height: 100%;
-  background-color:#fff8f0;
   overscroll-behavior-y: none;
 }
 
 body {
-  background:#fff8f0;
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
   min-height: 100vh;
