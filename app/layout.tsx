@@ -105,29 +105,19 @@ export default async function RootLayout({
   const settings = await getSiteSettings();
 
   return (
-    <html lang="es" style={{ height: '100%', backgroundColor: '#fff8f0;' }}>
+    <html lang="es" style={{ height: '100%'  , backgroundColor: '#fff8f0;'}}>
       <body
         className={`${inter.variable} ${oswald.variable} ${caveat.variable} antialiased text-foreground`}
-        style={{ minHeight: '100vh', backgroundColor: '#fff8f0;' }}
+        style={{ 
+          minHeight: '100vh',
+          backgroundImage: 'url(/sand-beige.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+          backgroundColor: '#fff8f0'
+        }}
       >
-        <div 
-          className="fixed top-0 left-0 right-0 bottom-0 z-[-1]" 
-          style={{ 
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: '#fff8f0;'
-          }}
-        >
-          <Image
-            src="/sand-beige.jpg"
-            alt="Background"
-            fill
-            className="object-cover"
-            quality={100}
-            priority
-            sizes="100vw"
-          />
-        </div>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

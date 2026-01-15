@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       },
     ],
     formats: ['image/avif', 'image/webp'],
+    qualities: [100, 75],
   },
   async redirects() {
     return [
