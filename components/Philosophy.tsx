@@ -43,10 +43,7 @@ export default function Philosophy() {
                                 En nuestro lugar, nos especializamos en un servicio al cliente increíble y rápido.
                             </h3>
                             <p className="text-base md:text-lg text-gray-700 leading-relaxed font-mono">
-                                Estamos en una misión de servir nuestros productos rápidamente y superar tus expectativas cada vez.
-                                Creemos en un menú ágil que refleja la vibra de nuestro restaurante, aumenta la eficiencia y hace que ordenar en línea sea fácil.
-                                Todo esto para elevar tu experiencia como cliente. Esto – no es solo un concepto;
-                                es nuestro estilo de vida.
+                                Estamos en una misión de servir nuestros productos rápidamente, y superar tus expectativas elevando una de las comidas callejeras que todos amamos, las hamburguesas. Creemos en un menú ágil que refleja la vibra de nuestro restaurante, aumenta la eficiencia y hace que ordenar en línea sea fácil. Todo esto para elevar tu experiencia como cliente. Esto – no es solo un concepto; es nuestro estilo de vida.
                             </p>
                         </div>
                     </div>
