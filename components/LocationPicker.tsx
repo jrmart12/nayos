@@ -12,6 +12,7 @@ export default function LocationPicker({ onLocationSelect, initialAddress }: Loc
     const [isMobile, setIsMobile] = useState(false);
     const [manualAddress, setManualAddress] = useState(initialAddress || '');
     const [showManualInput, setShowManualInput] = useState(false);
+    const [locationFailed, setLocationFailed] = useState(false);
 
     // Detect mobile on mount
     useEffect(() => {
@@ -25,7 +26,7 @@ export default function LocationPicker({ onLocationSelect, initialAddress }: Loc
 
     const handleUseMyLocation = () => {
         if (!navigator.geolocation) {
-            setShowManualInput(true);
+            setLocationFailed(true);
             return;
         }
 
@@ -48,7 +49,7 @@ export default function LocationPicker({ onLocationSelect, initialAddress }: Loc
 
         const handleFinalError = () => {
             setIsLoading(false);
-            setShowManualInput(true);
+            setLocationFailed(true);
         };
 
         const handleError = (error: GeolocationPositionError) => {
@@ -111,6 +112,16 @@ export default function LocationPicker({ onLocationSelect, initialAddress }: Loc
                     )}
                 </button>
 
+                {locationFailed && !showManualInput && (
+                    <button
+                        type="button"
+                        onClick={() => setShowManualInput(true)}
+                        className="w-full text-blue-600 text-xs underline py-1"
+                    >
+                        Ingresar dirección manualmente
+                    </button>
+                )}
+
                 {showManualInput && (
                     <div className="space-y-2 pt-1">
                         <p className="text-red-500 text-xs text-center">
@@ -135,15 +146,7 @@ export default function LocationPicker({ onLocationSelect, initialAddress }: Loc
                     </div>
                 )}
 
-                {!showManualInput && (
-                    <button
-                        type="button"
-                        onClick={() => setShowManualInput(true)}
-                        className="w-full text-blue-600 text-xs underline py-1"
-                    >
-                        Ingresar dirección manualmente
-                    </button>
-                )}
+
             </div>
         );
     }
