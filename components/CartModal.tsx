@@ -9,7 +9,7 @@ import LocationPicker from './LocationPicker';
 import { calculateDeliveryPrice, formatPrice } from '@/lib/deliveryUtils';
 import { upload } from '@vercel/blob/client';
 import { compressImage } from '@/lib/imageUtils';
-
+import { saveOrder } from '@/lib/saveOrder';
 
 import { useRouter } from 'next/navigation';
 
@@ -195,6 +195,25 @@ export default function CartModal({ settings }: { settings?: any }) {
 
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+        // Save order to Supabase before opening WhatsApp
+        try {
+            await saveOrder({
+                customerName: customer?.name || '',
+                customerPhone: customer?.phone || '',
+                customerAddress: customer?.address,
+                deliveryMethod: deliveryMethod,
+                paymentMethod: customer?.paymentMethod || '',
+                subtotal: totalPrice,
+                deliveryPrice: deliveryPrice,
+                total: totalPrice + deliveryPrice,
+                items: items,
+                notes: customer?.notes,
+                transferImageUrl: imageUrl || undefined,
+            });
+        } catch (err) {
+            console.error('Failed to save order:', err);
+        }
 
         window.open(whatsappUrl, '_blank');
     };
@@ -504,6 +523,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                 >
                                                     <span className="font-bold text-xs">Tarjetas</span>
                                                 </button>
+
                                             </div>
                                             {formErrors.paymentMethod && <p className="text-red-500 text-xs mt-2">{formErrors.paymentMethod}</p>}
 
