@@ -16,6 +16,21 @@ export interface OrderData {
 }
 
 export async function saveOrder(data: OrderData): Promise<void> {
+  // Deduplication: skip if the same phone + total was saved within the last 12 hours
+  const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
+  const { data: existing } = await supabase
+    .from('orders')
+    .select('id')
+    .eq('customer_phone', data.customerPhone)
+    .eq('total', data.total)
+    .gte('created_at', twelveHoursAgo)
+    .limit(1);
+
+  if (existing && existing.length > 0) {
+    // Duplicate detected — skip insert
+    return;
+  }
+
   const { error } = await supabase.from('orders').insert([
     {
       customer_name: data.customerName,

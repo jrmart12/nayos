@@ -21,6 +21,7 @@ export default function CartModal({ settings }: { settings?: any }) {
     const [transferImage, setTransferImage] = useState<File | null>(null);
     const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
     const [isUploading, setIsUploading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [copiedAccount, setCopiedAccount] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -196,26 +197,29 @@ export default function CartModal({ settings }: { settings?: any }) {
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
-        // Save order to Supabase before opening WhatsApp
-        try {
-            await saveOrder({
-                customerName: customer?.name || '',
-                customerPhone: customer?.phone || '',
-                customerAddress: customer?.address,
-                deliveryMethod: deliveryMethod,
-                paymentMethod: customer?.paymentMethod || '',
-                subtotal: totalPrice,
-                deliveryPrice: deliveryPrice,
-                total: totalPrice + deliveryPrice,
-                items: items,
-                notes: customer?.notes,
-                transferImageUrl: imageUrl || undefined,
-            });
-        } catch (err) {
-            console.error('Failed to save order:', err);
-        }
-
+        // Open WhatsApp immediately so the user is not blocked
         window.open(whatsappUrl, '_blank');
+
+        // Reset submitting state after a short delay for visual feedback
+        setIsSubmitting(true);
+        setTimeout(() => setIsSubmitting(false), 1500);
+
+        // Save order in the background (fire and forget)
+        saveOrder({
+            customerName: customer?.name || '',
+            customerPhone: customer?.phone || '',
+            customerAddress: customer?.address,
+            deliveryMethod: deliveryMethod,
+            paymentMethod: customer?.paymentMethod || '',
+            subtotal: totalPrice,
+            deliveryPrice: deliveryPrice,
+            total: totalPrice + deliveryPrice,
+            items: items,
+            notes: customer?.notes,
+            transferImageUrl: imageUrl || undefined,
+        }).catch(err => {
+            console.error('Failed to save order:', err);
+        });
     };
 
     const onCustomerChange = (key: string, value: string) => {
@@ -693,8 +697,8 @@ export default function CartModal({ settings }: { settings?: any }) {
                                         <button
                                             type="submit"
                                             form="checkout-form"
-                                            disabled={isUploading}
-                                            className={`w-full font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide flex items-center justify-center gap-2 border border-transparent ${isUploading
+                                            disabled={isUploading || isSubmitting}
+                                            className={`w-full font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide flex items-center justify-center gap-2 border border-transparent ${isUploading || isSubmitting
                                                 ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
                                                 : 'bg-green-600 text-white hover:bg-green-700'
                                                 }`}
@@ -702,7 +706,12 @@ export default function CartModal({ settings }: { settings?: any }) {
                                             {isUploading ? (
                                                 <>
                                                     <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                                                    Enviando...
+                                                    Subiendo comprobante...
+                                                </>
+                                            ) : isSubmitting ? (
+                                                <>
+                                                    <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                                                    Abriendo WhatsApp...
                                                 </>
                                             ) : (
                                                 <>
