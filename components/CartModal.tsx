@@ -11,20 +11,83 @@ import { upload } from '@vercel/blob/client';
 import { compressImage } from '@/lib/imageUtils';
 import { saveOrder } from '@/lib/saveOrder';
 
+const SPANISH_MONTHS: Record<string, number> = {
+    enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+    julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11,
+};
+
+function extractDateFromText(text: string): Date | null {
+    const spanishMatch = text.match(/(\d{1,2})\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\s+(\d{4})/i);
+    if (spanishMatch) {
+        return new Date(parseInt(spanishMatch[3]), SPANISH_MONTHS[spanishMatch[2].toLowerCase()], parseInt(spanishMatch[1]));
+    }
+    const numMatch = text.match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+    if (numMatch) return new Date(parseInt(numMatch[3]), parseInt(numMatch[2]) - 1, parseInt(numMatch[1]));
+    return null;
+}
+
+function extractAmountFromText(text: string): number | null {
+    const match = text.match(/L\.?\s*((?:\d{1,3}(?:,\d{3})*|\d+)(?:\.\d{1,2})?)/i);
+    if (!match) return null;
+    const parsed = parseFloat(match[1].replace(/,/g, ''));
+    return isNaN(parsed) ? null : parsed;
+}
+
+async function runOCR(file: File, expectedAmount: number) {
+    const { createWorker } = await import('tesseract.js');
+    const worker = await createWorker('spa');
+    const { data: { text } } = await worker.recognize(file);
+    await worker.terminate();
+
+    const detectedDate = extractDateFromText(text);
+    const detectedAmount = extractAmountFromText(text);
+    const today = new Date();
+    const isToday = detectedDate
+        ? detectedDate.getDate() === today.getDate() &&
+          detectedDate.getMonth() === today.getMonth() &&
+          detectedDate.getFullYear() === today.getFullYear()
+        : null;
+    const amountMatches = detectedAmount !== null
+        ? Math.abs(detectedAmount - expectedAmount) < 1
+        : null;
+    return {
+        isToday,
+        amountMatches,
+        detectedDate: detectedDate ? detectedDate.toLocaleDateString('es-HN', { day: '2-digit', month: 'long', year: 'numeric' }) : null,
+        detectedAmount,
+    };
+}
+
 import { useRouter } from 'next/navigation';
 
 export default function CartModal({ settings }: { settings?: any }) {
     const { items, isOpen, setIsOpen, removeFromCart, updateQuantity, totalPrice, customer, setCustomer, deliveryMethod, setDeliveryMethod, deliveryPrice, setDeliveryPrice } = useCart();
     const [currentStep, setCurrentStep] = useState<'cart' | 'checkout'>('cart');
     const [isHydrated, setIsHydrated] = useState(false);
-    const [formErrors, setFormErrors] = useState<{ name?: string, phone?: string, address?: string, paymentMethod?: string, transferImage?: string }>({});
+    const [formErrors, setFormErrors] = useState<{ name?: string, phone?: string, address?: string, paymentMethod?: string, transferImage?: string, bono?: string, bonoEmail?: string, bonoIdentity?: string }>({});
     const [transferImage, setTransferImage] = useState<File | null>(null);
     const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
     const [isUploading, setIsUploading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [copiedAccount, setCopiedAccount] = useState<string | null>(null);
+    const [transferVerification, setTransferVerification] = useState<{
+        isToday: boolean | null;
+        amountMatches: boolean | null;
+        detectedDate: string | null;
+        detectedAmount: number | null;
+    } | null>(null);
+    const [isVerifying, setIsVerifying] = useState(false);
+    const [hasBono, setHasBono] = useState<boolean | null>(null);
+    const [bonoEmailFile, setBonoEmailFile] = useState<File | null>(null);
+    const [bonoIdentityFile, setBonoIdentityFile] = useState<File | null>(null);
+    const [uploadedBonoEmailUrl, setUploadedBonoEmailUrl] = useState('');
+    const [uploadedBonoIdentityUrl, setUploadedBonoIdentityUrl] = useState('');
+    const [isUploadingBonoEmail, setIsUploadingBonoEmail] = useState(false);
+    const [isUploadingBonoIdentity, setIsUploadingBonoIdentity] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const bonoEmailInputRef = useRef<HTMLInputElement>(null);
+    const bonoIdentityInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
     const prevIsOpenRef = useRef(isOpen);
@@ -102,7 +165,7 @@ export default function CartModal({ settings }: { settings?: any }) {
 
         setFormErrors({});
         setFormErrors({});
-        const errors: { name?: string, phone?: string, address?: string, paymentMethod?: string, transferImage?: string } = {};
+        const errors: { name?: string, phone?: string, address?: string, paymentMethod?: string, transferImage?: string, bono?: string, bonoEmail?: string, bonoIdentity?: string } = {};
 
         if (!customer?.name?.trim()) errors.name = 'El nombre completo es requerido';
         if (!customer?.phone?.trim()) errors.phone = 'El teléfono es requerido';
@@ -117,6 +180,18 @@ export default function CartModal({ settings }: { settings?: any }) {
 
         if (customer?.paymentMethod === 'transfer' && !uploadedImageUrl) {
             errors.transferImage = 'Por favor suba el comprobante de transferencia';
+        }
+        if (customer?.paymentMethod === 'transfer' && transferVerification?.isToday === false) {
+            errors.transferImage = 'El comprobante no es de hoy. Por favor sube la transferencia correcta.';
+        }
+        if (customer?.paymentMethod === 'transfer' && transferVerification?.amountMatches === false) {
+            errors.transferImage = `El monto del comprobante (L. ${transferVerification.detectedAmount?.toFixed(2)}) no coincide con el total de la orden (L. ${(totalPrice + deliveryPrice).toFixed(2)}). Por favor verifica.`;
+        }
+        if (hasBono === true && !uploadedBonoEmailUrl) {
+            errors.bonoEmail = 'Por favor sube el screenshot del correo del bono';
+        }
+        if (hasBono === true && !uploadedBonoIdentityUrl) {
+            errors.bonoIdentity = 'Por favor sube tu documento de identidad';
         }
 
         if (Object.keys(errors).length > 0) {
@@ -191,6 +266,13 @@ export default function CartModal({ settings }: { settings?: any }) {
             message += `*Comprobante de Transferencia:*\n${imageUrl}\n\n`;
         }
 
+        if (hasBono) {
+            message += `*BONO DE REGALO:*\n`;
+            if (uploadedBonoEmailUrl) message += `Screenshot del bono: ${uploadedBonoEmailUrl}\n`;
+            if (uploadedBonoIdentityUrl) message += `Documento de identidad: ${uploadedBonoIdentityUrl}\n`;
+            message += '\n';
+        }
+
         // Remove emojis from the entire message
         message = removeEmojis(message);
 
@@ -256,7 +338,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed inset-y-0 right-0 w-full md:w-[500px] bg-white z-[100] shadow-2xl flex flex-col border-l border-gray-100"
+                        className="fixed inset-y-0 right-0 w-full md:w-[500px] bg-white z-[100] shadow-2xl overflow-y-auto border-l border-gray-100"
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
@@ -276,7 +358,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                         </div>
 
                         {/* Content */}
-                        <div className="flex-1 overflow-y-auto p-6">
+                        <div className="p-6">
                             {currentStep === 'cart' ? (
                                 items.length === 0 ? (
                                     <div className="h-full flex flex-col items-center justify-center text-gray-500 space-y-4">
@@ -566,11 +648,19 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                                     if (e.target.files && e.target.files[0]) {
                                                                         const file = e.target.files[0];
                                                                         setTransferImage(file);
+                                                                        setTransferVerification(null);
                                                                         setFormErrors(prev => ({ ...prev, transferImage: undefined }));
                                                                         setUploadError(null);
                                                                         setUploadedImageUrl('');
 
-                                                                        // Upload immediately
+                                                                        // Start OCR immediately on the file (client-side, no API needed)
+                                                                        setIsVerifying(true);
+                                                                        runOCR(file, totalPrice + deliveryPrice)
+                                                                            .then(result => setTransferVerification(result))
+                                                                            .catch(() => {})
+                                                                            .finally(() => setIsVerifying(false));
+
+                                                                        // Upload in parallel
                                                                         setIsUploading(true);
                                                                         try {
                                                                             const compressedImage = await compressImage(file);
@@ -582,7 +672,6 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                                                 handleUploadUrl: '/api/upload',
                                                                             });
                                                                             setUploadedImageUrl(blob.url);
-                                                                            console.log('Image uploaded successfully:', blob.url);
                                                                         } catch (error) {
                                                                             console.error('Error uploading image:', error);
                                                                             setUploadError(`Error: ${(error as Error).message}`);
@@ -629,6 +718,39 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                             {uploadError && (
                                                                 <p className="text-red-500 text-xs mt-1 font-bold">{uploadError}</p>
                                                             )}
+                                                            {isVerifying && (
+                                                                <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                                                                    <div className="w-3 h-3 border-2 border-gray-400/30 border-t-gray-400 rounded-full animate-spin" />
+                                                                    Verificando comprobante...
+                                                                </div>
+                                                            )}
+                                                            {transferVerification && (
+                                                                <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-lg space-y-1.5">
+                                                                    <p className="text-xs font-bold text-gray-500 uppercase mb-2">Verificación automática</p>
+                                                                    <div className="flex items-center gap-2 text-xs">
+                                                                        {transferVerification.isToday === true ? (
+                                                                            <span className="text-green-600 font-semibold">✓ Fecha: hoy</span>
+                                                                        ) : transferVerification.isToday === false ? (
+                                                                            <span className="text-red-600 font-semibold">✗ Fecha detectada: {transferVerification.detectedDate} — no es de hoy</span>
+                                                                        ) : (
+                                                                            <span className="text-gray-400">— Fecha no detectada en la imagen</span>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="flex items-center gap-2 text-xs">
+                                                                        {transferVerification.amountMatches === true ? (
+                                                                            <span className="text-green-600 font-semibold">✓ Monto: L. {transferVerification.detectedAmount?.toFixed(2)} correcto</span>
+                                                                        ) : transferVerification.amountMatches === false ? (
+                                                                            <span className="text-red-600 font-semibold">✗ Monto detectado: L. {transferVerification.detectedAmount?.toFixed(2)} — se esperaba L. {(totalPrice + deliveryPrice).toFixed(2)}</span>
+                                                                        ) : (
+                                                                            <span className="text-gray-400">— Monto no detectado en la imagen</span>
+                                                                        )}
+                                                                    </div>
+                                                                    {(transferVerification.isToday === false || transferVerification.amountMatches === false) && (
+                                                                        <p className="text-red-500 text-xs mt-1 font-medium">⚠️ Por favor verifica que el comprobante sea correcto antes de continuar.</p>
+                                                                    )}
+                                                                </div>
+                                                            )}
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -644,6 +766,154 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                     <p className="text-gray-500 text-xs mt-2">
                                                         Podrás pagar con cualquier tarjeta de crédito o débito.
                                                     </p>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Bono de regalo */}
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-3">¿Tienes un bono de regalo para redimir?</label>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { setHasBono(true); setFormErrors(prev => ({ ...prev, bono: undefined })); }}
+                                                    className={`p-3 rounded-lg border flex flex-col items-center gap-1 transition-all text-sm ${
+                                                        hasBono === true
+                                                            ? 'bg-primary text-white border-primary shadow-md'
+                                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                                    }`}
+                                                >
+                                                    <span className="font-bold text-xs">Sí, tengo un bono</span>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { setHasBono(false); setFormErrors(prev => ({ ...prev, bono: undefined, bonoEmail: undefined, bonoIdentity: undefined })); }}
+                                                    className={`p-3 rounded-lg border flex flex-col items-center gap-1 transition-all text-sm ${
+                                                        hasBono === false
+                                                            ? 'bg-primary text-white border-primary shadow-md'
+                                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                                    }`}
+                                                >
+                                                    <span className="font-bold text-xs">No, continuar</span>
+                                                </button>
+                                            </div>
+                                            {formErrors.bono && <p className="text-red-500 text-xs mt-2">{formErrors.bono}</p>}
+
+                                            {hasBono === true && (
+                                                <div className="mt-4 space-y-4 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                                                    <p className="text-sm text-amber-800 font-semibold">Para canjear tu bono necesitamos verificar:</p>
+
+                                                    {/* Screenshot del correo del bono */}
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-600 uppercase mb-2">Screenshot del correo del bono *</label>
+                                                        <input
+                                                            ref={bonoEmailInputRef}
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={async (e) => {
+                                                                if (e.target.files && e.target.files[0]) {
+                                                                    const file = e.target.files[0];
+                                                                    setBonoEmailFile(file);
+                                                                    setFormErrors(prev => ({ ...prev, bonoEmail: undefined }));
+                                                                    setIsUploadingBonoEmail(true);
+                                                                    try {
+                                                                        const compressedImage = await compressImage(file);
+                                                                        const timestamp = Date.now();
+                                                                        const uniqueName = `bono-email-${timestamp}-${compressedImage.name}`;
+                                                                        const blob = await upload(uniqueName, compressedImage, {
+                                                                            access: 'public',
+                                                                            handleUploadUrl: '/api/upload',
+                                                                        });
+                                                                        setUploadedBonoEmailUrl(blob.url);
+                                                                    } catch (error) {
+                                                                        console.error('Error uploading bono email:', error);
+                                                                        setBonoEmailFile(null);
+                                                                    }
+                                                                    setIsUploadingBonoEmail(false);
+                                                                }
+                                                            }}
+                                                            className="hidden"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => bonoEmailInputRef.current?.click()}
+                                                            disabled={isUploadingBonoEmail}
+                                                            className={`w-full p-3 rounded-lg border border-dashed flex items-center justify-center gap-2 transition-all text-sm ${
+                                                                isUploadingBonoEmail
+                                                                    ? 'bg-gray-100 border-gray-300 text-gray-500 cursor-wait'
+                                                                    : uploadedBonoEmailUrl
+                                                                        ? 'bg-green-50 border-green-500 text-green-600'
+                                                                        : formErrors.bonoEmail
+                                                                            ? 'bg-red-50 border-red-500 text-red-500'
+                                                                            : 'bg-white border-amber-300 text-amber-700 hover:bg-amber-50'
+                                                            }`}
+                                                        >
+                                                            {isUploadingBonoEmail ? (
+                                                                <><div className="w-4 h-4 border-2 border-gray-400/30 border-t-gray-400 rounded-full animate-spin" /><span>Subiendo...</span></>
+                                                            ) : uploadedBonoEmailUrl ? (
+                                                                <><span className="truncate max-w-[200px]">{bonoEmailFile?.name || 'Correo del bono'}</span><span className="text-xs bg-green-500/20 px-2 py-0.5 rounded text-green-600">✓ Subido - Cambiar</span></>
+                                                            ) : (
+                                                                <><Plus size={16} /><span>Subir screenshot del correo</span></>
+                                                            )}
+                                                        </button>
+                                                        {formErrors.bonoEmail && <p className="text-red-500 text-xs mt-1">{formErrors.bonoEmail}</p>}
+                                                    </div>
+
+                                                    {/* Documento de identidad */}
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-600 uppercase mb-2">Documento de Identidad *</label>
+                                                        <input
+                                                            ref={bonoIdentityInputRef}
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={async (e) => {
+                                                                if (e.target.files && e.target.files[0]) {
+                                                                    const file = e.target.files[0];
+                                                                    setBonoIdentityFile(file);
+                                                                    setFormErrors(prev => ({ ...prev, bonoIdentity: undefined }));
+                                                                    setIsUploadingBonoIdentity(true);
+                                                                    try {
+                                                                        const compressedImage = await compressImage(file);
+                                                                        const timestamp = Date.now();
+                                                                        const uniqueName = `bono-id-${timestamp}-${compressedImage.name}`;
+                                                                        const blob = await upload(uniqueName, compressedImage, {
+                                                                            access: 'public',
+                                                                            handleUploadUrl: '/api/upload',
+                                                                        });
+                                                                        setUploadedBonoIdentityUrl(blob.url);
+                                                                    } catch (error) {
+                                                                        console.error('Error uploading identity doc:', error);
+                                                                        setBonoIdentityFile(null);
+                                                                    }
+                                                                    setIsUploadingBonoIdentity(false);
+                                                                }
+                                                            }}
+                                                            className="hidden"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => bonoIdentityInputRef.current?.click()}
+                                                            disabled={isUploadingBonoIdentity}
+                                                            className={`w-full p-3 rounded-lg border border-dashed flex items-center justify-center gap-2 transition-all text-sm ${
+                                                                isUploadingBonoIdentity
+                                                                    ? 'bg-gray-100 border-gray-300 text-gray-500 cursor-wait'
+                                                                    : uploadedBonoIdentityUrl
+                                                                        ? 'bg-green-50 border-green-500 text-green-600'
+                                                                        : formErrors.bonoIdentity
+                                                                            ? 'bg-red-50 border-red-500 text-red-500'
+                                                                            : 'bg-white border-amber-300 text-amber-700 hover:bg-amber-50'
+                                                            }`}
+                                                        >
+                                                            {isUploadingBonoIdentity ? (
+                                                                <><div className="w-4 h-4 border-2 border-gray-400/30 border-t-gray-400 rounded-full animate-spin" /><span>Subiendo...</span></>
+                                                            ) : uploadedBonoIdentityUrl ? (
+                                                                <><span className="truncate max-w-[200px]">{bonoIdentityFile?.name || 'Documento de identidad'}</span><span className="text-xs bg-green-500/20 px-2 py-0.5 rounded text-green-600">✓ Subido - Cambiar</span></>
+                                                            ) : (
+                                                                <><Plus size={16} /><span>Subir documento de identidad</span></>
+                                                            )}
+                                                        </button>
+                                                        {formErrors.bonoIdentity && <p className="text-red-500 text-xs mt-1">{formErrors.bonoIdentity}</p>}
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
@@ -697,8 +967,8 @@ export default function CartModal({ settings }: { settings?: any }) {
                                         <button
                                             type="submit"
                                             form="checkout-form"
-                                            disabled={isUploading || isSubmitting}
-                                            className={`w-full font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide flex items-center justify-center gap-2 border border-transparent ${isUploading || isSubmitting
+                                            disabled={isUploading || isSubmitting || isUploadingBonoEmail || isUploadingBonoIdentity || isVerifying || transferVerification?.isToday === false || transferVerification?.amountMatches === false}
+                                            className={`w-full font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide flex items-center justify-center gap-2 border border-transparent ${isUploading || isSubmitting || transferVerification?.isToday === false || transferVerification?.amountMatches === false
                                                 ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
                                                 : 'bg-green-600 text-white hover:bg-green-700'
                                                 }`}
