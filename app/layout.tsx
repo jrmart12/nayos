@@ -6,6 +6,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import CartButton from "@/components/CartButton";
 import CartModal from "@/components/CartModal";
 import { client } from "@/lib/sanity";
+import PageviewTracker from "@/components/PageviewTracker";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -188,6 +189,7 @@ export default async function RootLayout({
         />
 
         <CartProvider>
+          <PageviewTracker />
           {children}
           <CartButton />
           <CartModal settings={settings} />

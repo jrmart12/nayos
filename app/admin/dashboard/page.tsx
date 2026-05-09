@@ -40,6 +40,13 @@ interface Order {
   transfer_image_url: string | null;
 }
 
+interface AnalyticsData {
+  totalViews: number;
+  dailyViews: { date: string; views: number }[];
+  topPages: { path: string; views: number }[];
+  topReferrers: { referrer: string; views: number }[];
+}
+
 const PAYMENT_LABELS: Record<string, string> = {
   transfer: 'Transferencia',
   bac_compra_click: 'Tarjeta',
@@ -99,6 +106,9 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [month, setMonth] = useState(getCurrentMonth);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [activeTab, setActiveTab] = useState<'orders' | 'analytics'>('orders');
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const monthOptions = getMonthOptions();
 
   const fetchOrders = useCallback(async () => {
@@ -121,6 +131,24 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
+
+  const fetchAnalytics = useCallback(async () => {
+    setAnalyticsLoading(true);
+    try {
+      const res = await fetch(`/api/admin/analytics?month=${month}`);
+      if (res.status === 401) { router.push('/admin'); return; }
+      const data = await res.json();
+      setAnalytics(data);
+    } catch (err) {
+      console.error('Error fetching analytics:', err);
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  }, [month, router]);
+
+  useEffect(() => {
+    if (activeTab === 'analytics') fetchAnalytics();
+  }, [activeTab, fetchAnalytics]);
 
   const handleLogout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' });
@@ -194,12 +222,32 @@ export default function DashboardPage() {
           </div>
 
           <nav className="p-4 space-y-1 flex-1">
-            <a className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-orange-500/10 text-orange-400 font-semibold text-sm">
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm w-full transition-colors ${
+                activeTab === 'orders'
+                  ? 'bg-orange-500/10 text-orange-400'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800'
+              }`}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                 <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
               </svg>
               Resumen
-            </a>
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm w-full transition-colors ${
+                activeTab === 'analytics'
+                  ? 'bg-orange-500/10 text-orange-400'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800'
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path fillRule="evenodd" d="M5.636 4.575a.75.75 0 0 1 0 1.06 7.5 7.5 0 0 0 0 10.607.75.75 0 0 1-1.06 1.061 9 9 0 0 1 0-12.728.75.75 0 0 1 1.06 0Zm12.728 0a.75.75 0 0 1 1.06 0 9 9 0 0 1 0 12.728.75.75 0 1 1-1.06-1.06 7.5 7.5 0 0 0 0-10.607.75.75 0 0 1 0-1.061Zm-9.193 2.121a.75.75 0 0 1 0 1.061 4.5 4.5 0 0 0 0 6.364.75.75 0 1 1-1.061 1.06 6 6 0 0 1 0-8.485.75.75 0 0 1 1.06 0Zm6.364 0a.75.75 0 0 1 1.06 0 6 6 0 0 1 0 8.485.75.75 0 0 1-1.06-1.06 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.061ZM12 12a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clipRule="evenodd" />
+              </svg>
+              Analíticas
+            </button>
           </nav>
 
           <div className="p-4 border-t border-gray-800">
@@ -219,7 +267,7 @@ export default function DashboardPage() {
         <main className="flex-1 overflow-y-auto">
           {/* Top Bar */}
           <header className="sticky top-0 z-10 bg-gray-950/80 backdrop-blur border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-            <h1 className="text-lg font-black text-white">Resumen de Ventas</h1>
+            <h1 className="text-lg font-black text-white">{activeTab === 'orders' ? 'Resumen de Ventas' : 'Analíticas del Sitio'}</h1>
             <div className="flex items-center gap-3">
               <select
                 value={month}
@@ -231,7 +279,7 @@ export default function DashboardPage() {
                 ))}
               </select>
               <button
-                onClick={fetchOrders}
+                onClick={activeTab === 'orders' ? fetchOrders : fetchAnalytics}
                 className="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white text-sm rounded-lg px-3 py-1.5 transition-colors"
               >
                 Actualizar
@@ -247,7 +295,7 @@ export default function DashboardPage() {
           </header>
 
           <div className="p-6 space-y-6">
-            {loading ? (
+            {activeTab === 'orders' && (loading ? (
               <div className="flex items-center justify-center h-64">
                 <div className="flex flex-col items-center gap-3">
                   <svg className="animate-spin h-8 w-8 text-orange-500" viewBox="0 0 24 24" fill="none">
@@ -481,7 +529,115 @@ export default function DashboardPage() {
                   )}
                 </div>
               </>
-            )}
+            ))}
+
+            {activeTab === 'analytics' && (analyticsLoading ? (
+              <div className="flex items-center justify-center h-64">
+                <div className="flex flex-col items-center gap-3">
+                  <svg className="animate-spin h-8 w-8 text-orange-500" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  <p className="text-gray-400 text-sm">Cargando analíticas...</p>
+                </div>
+              </div>
+            ) : analytics ? (
+              <>
+                {/* KPI Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <StatCard label="Total Visitas" value={analytics.totalViews.toString()} sub={monthOptions.find(o => o.value === month)?.label || month} icon="👁️" color="blue" />
+                  <StatCard label="Páginas Distintas" value={analytics.topPages.length.toString()} sub="páginas visitadas" icon="📄" color="purple" />
+                  <StatCard label="Fuentes de Tráfico" value={analytics.topReferrers.length.toString()} sub="referentes externos" icon="🔗" color="green" />
+                </div>
+
+                {/* Daily views chart */}
+                <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5">
+                  <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">Visitas por Día</h2>
+                  {analytics.dailyViews.length === 0 ? (
+                    <div className="flex items-center justify-center h-48 text-gray-500 text-sm">Sin datos para este período</div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height={220}>
+                      <AreaChart data={analytics.dailyViews} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                        <defs>
+                          <linearGradient id="viewsGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+                        <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={false} tickLine={false} />
+                        <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                        <Tooltip
+                          contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '8px', color: '#fff' }}
+                          formatter={(v) => [v, 'Visitas']}
+                        />
+                        <Area type="monotone" dataKey="views" stroke="#3b82f6" strokeWidth={2} fill="url(#viewsGradient)" dot={{ fill: '#3b82f6', r: 3 }} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  )}
+                </div>
+
+                {/* Top Pages + Referrers */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5">
+                    <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">Páginas Más Visitadas</h2>
+                    {analytics.topPages.length === 0 ? (
+                      <p className="text-gray-500 text-sm">Sin datos</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {analytics.topPages.map((page, i) => (
+                          <div key={page.path} className="flex items-center gap-3">
+                            <span className="text-xs font-bold text-gray-500 w-5 shrink-0">{i + 1}</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="h-2 bg-blue-500/20 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-blue-500 rounded-full transition-all"
+                                  style={{ width: `${Math.round((page.views / analytics.topPages[0].views) * 100)}%` }}
+                                />
+                              </div>
+                            </div>
+                            <span className="text-xs text-gray-300 font-mono shrink-0 max-w-[130px] truncate" title={page.path}>{page.path}</span>
+                            <span className="text-xs font-bold text-white shrink-0 w-8 text-right">{page.views}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5">
+                    <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4">Fuentes de Tráfico</h2>
+                    {analytics.topReferrers.length === 0 ? (
+                      <div className="text-gray-500 text-sm">
+                        <p>Sin referentes externos.</p>
+                        <p className="text-xs mt-1 text-gray-600">La mayoría del tráfico es directo o desde búsquedas.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {analytics.topReferrers.map((ref, i) => (
+                          <div key={ref.referrer} className="flex items-center gap-3">
+                            <span className="text-xs font-bold text-gray-500 w-5 shrink-0">{i + 1}</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="h-2 bg-green-500/20 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-green-500 rounded-full transition-all"
+                                  style={{ width: `${Math.round((ref.views / analytics.topReferrers[0].views) * 100)}%` }}
+                                />
+                              </div>
+                            </div>
+                            <span className="text-xs text-gray-300 font-mono shrink-0 max-w-[130px] truncate" title={ref.referrer}>{ref.referrer}</span>
+                            <span className="text-xs font-bold text-white shrink-0 w-8 text-right">{ref.views}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-center justify-center h-64 text-gray-500 text-sm">
+                No hay datos de visitas para este período
+              </div>
+            ))}
           </div>
         </main>
       </div>
