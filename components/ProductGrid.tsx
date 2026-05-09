@@ -31,6 +31,8 @@ const categoryIcons: Record<string, string> = {
     'acompanamientos': '🍟',
     'bebidas': '🥤',
     'combos': '🎉',
+    'special-combos': '⭐',
+    'nayos-signatures': '✨',
     'otros': '🍽️',
 }
 
@@ -42,6 +44,8 @@ const translateCategory = (category: string): string => {
         'acompanamientos': 'Acompañamientos',
         'bebidas': 'Bebidas',
         'combos': 'Combos',
+        'special-combos': 'Special Combos',
+        'nayos-signatures': 'Nayos Signatures',
         'otros': 'Otros',
     }
 
