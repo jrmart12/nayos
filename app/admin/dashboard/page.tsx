@@ -264,15 +264,15 @@ export default function DashboardPage() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
           {/* Top Bar */}
-          <header className="sticky top-0 z-10 bg-gray-950/80 backdrop-blur border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-            <h1 className="text-lg font-black text-white">{activeTab === 'orders' ? 'Resumen de Ventas' : 'Analíticas del Sitio'}</h1>
-            <div className="flex items-center gap-3">
+          <header className="sticky top-0 z-10 bg-gray-950/80 backdrop-blur border-b border-gray-800 px-4 md:px-6 py-4 flex items-center justify-between gap-2">
+            <h1 className="text-base md:text-lg font-black text-white shrink-0">{activeTab === 'orders' ? 'Resumen de Ventas' : 'Analíticas del Sitio'}</h1>
+            <div className="flex items-center gap-2">
               <select
                 value={month}
                 onChange={(e) => setMonth(e.target.value)}
-                className="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-orange-500 capitalize"
+                className="bg-gray-800 border border-gray-700 text-white text-xs md:text-sm rounded-lg px-2 md:px-3 py-1.5 focus:outline-none focus:border-orange-500 capitalize max-w-[130px] md:max-w-none"
               >
                 {monthOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -280,21 +280,14 @@ export default function DashboardPage() {
               </select>
               <button
                 onClick={activeTab === 'orders' ? fetchOrders : fetchAnalytics}
-                className="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white text-sm rounded-lg px-3 py-1.5 transition-colors"
+                className="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white text-xs md:text-sm rounded-lg px-2 md:px-3 py-1.5 transition-colors shrink-0"
               >
                 Actualizar
-              </button>
-              {/* Mobile logout */}
-              <button
-                onClick={handleLogout}
-                className="md:hidden bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg px-3 py-1.5"
-              >
-                Salir
               </button>
             </div>
           </header>
 
-          <div className="p-6 space-y-6">
+          <div className="p-4 md:p-6 space-y-4 md:space-y-6">
             {activeTab === 'orders' && (loading ? (
               <div className="flex items-center justify-center h-64">
                 <div className="flex flex-col items-center gap-3">
@@ -641,6 +634,41 @@ export default function DashboardPage() {
           </div>
         </main>
       </div>
+
+      {/* Mobile Bottom Nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-gray-900 border-t border-gray-800 flex items-center">
+        <button
+          onClick={() => setActiveTab('orders')}
+          className={`flex-1 flex flex-col items-center gap-1 py-3 text-xs font-semibold transition-colors ${
+            activeTab === 'orders' ? 'text-orange-400' : 'text-gray-500'
+          }`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+            <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
+          </svg>
+          Resumen
+        </button>
+        <button
+          onClick={() => setActiveTab('analytics')}
+          className={`flex-1 flex flex-col items-center gap-1 py-3 text-xs font-semibold transition-colors ${
+            activeTab === 'analytics' ? 'text-orange-400' : 'text-gray-500'
+          }`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+            <path fillRule="evenodd" d="M5.636 4.575a.75.75 0 0 1 0 1.06 7.5 7.5 0 0 0 0 10.607.75.75 0 0 1-1.06 1.061 9 9 0 0 1 0-12.728.75.75 0 0 1 1.06 0Zm12.728 0a.75.75 0 0 1 1.06 0 9 9 0 0 1 0 12.728.75.75 0 1 1-1.06-1.06 7.5 7.5 0 0 0 0-10.607.75.75 0 0 1 0-1.061Zm-9.193 2.121a.75.75 0 0 1 0 1.061 4.5 4.5 0 0 0 0 6.364.75.75 0 1 1-1.061 1.06 6 6 0 0 1 0-8.485.75.75 0 0 1 1.06 0Zm6.364 0a.75.75 0 0 1 1.06 0 6 6 0 0 1 0 8.485.75.75 0 0 1-1.06-1.06 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.061ZM12 12a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clipRule="evenodd" />
+          </svg>
+          Analíticas
+        </button>
+        <button
+          onClick={handleLogout}
+          className="flex-1 flex flex-col items-center gap-1 py-3 text-xs font-semibold text-gray-500 transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+            <path fillRule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+          </svg>
+          Salir
+        </button>
+      </nav>
 
       {/* Order Detail Modal */}
       {selectedOrder && (
