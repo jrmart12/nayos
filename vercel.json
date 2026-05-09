@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/cleanup-blobs",
       "schedule": "0 3 * * 0"
+    },
+    {
+      "path": "/api/cron/keep-alive",
+      "schedule": "0 12 */4 * *"
     }
   ],
   "headers": [
