@@ -192,7 +192,7 @@ export default async function RootLayout({
           <CartButton />
           <CartModal settings={settings} />
         </CartProvider>
-        <script defer src="https://cloud.umami.is/script.js" data-website-id="abe99048-96b0-4386-bd61-7ddd398183bc" />
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="abe99048-96b0-4386-bd61-7ddd398183bc" data-domains="nayosburger.com" />
       </body>
     </html>
   );

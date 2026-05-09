@@ -59,6 +59,7 @@ async function runOCR(file: File, expectedAmount: number) {
 }
 
 import { useRouter } from 'next/navigation';
+import { track } from '@/lib/umami';
 
 export default function CartModal({ settings }: { settings?: any }) {
     const { items, isOpen, setIsOpen, removeFromCart, updateQuantity, totalPrice, customer, setCustomer, deliveryMethod, setDeliveryMethod, deliveryPrice, setDeliveryPrice } = useCart();
@@ -146,6 +147,10 @@ export default function CartModal({ settings }: { settings?: any }) {
 
     const goToCheckout = () => {
         if (items.length === 0) return;
+        track('begin_checkout', {
+            item_count: items.length,
+            subtotal: totalPrice,
+        });
         setCurrentStep('checkout');
     };
 
@@ -281,6 +286,15 @@ export default function CartModal({ settings }: { settings?: any }) {
 
         // Open WhatsApp immediately so the user is not blocked
         window.open(whatsappUrl, '_blank');
+
+        track('place_order', {
+            item_count: items.length,
+            subtotal: totalPrice,
+            delivery_price: deliveryPrice,
+            total: totalPrice + deliveryPrice,
+            delivery_method: deliveryMethod,
+            payment_method: customer?.paymentMethod || 'unknown',
+        });
 
         // Reset submitting state after a short delay for visual feedback
         setIsSubmitting(true);

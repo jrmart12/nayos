@@ -1,5 +1,6 @@
 "use client"
 import { useCart } from '@/contexts/CartContext'
+import { track } from '@/lib/umami'
 
 interface AddToCartButtonProps {
     product: {
@@ -27,6 +28,11 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
                     image: product.image,
                     slug: product.slug,
                     unit: product.unit || 'porción'
+                })
+                track('add_to_cart', {
+                    product_id: product._id,
+                    product_name: product.name,
+                    price: product.price,
                 })
             }}
             className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"

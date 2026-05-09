@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { urlFor } from '@/sanity/lib/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import CheckeredPattern from './CheckeredPattern'
+import { track } from '@/lib/umami'
 
 interface Product {
     _id: string
@@ -83,6 +84,10 @@ export default function MenuProducts({ products }: MenuProductsProps) {
     const handleCategoryChange = (cat: string) => {
         setSelectedCategory(cat)
         setPage(0)
+        track('filter_category', {
+            category: cat,
+            label: categoryConfig[cat]?.label ?? cat,
+        })
     }
 
     const scrollToProducts = () => {
