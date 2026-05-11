@@ -68,6 +68,13 @@ export default function FreeShippingBanner() {
                                         ¡Envío Gratis!
                                     </h2>
 
+                                    {/* Validity badge */}
+                                    <div className="inline-block bg-primary/10 border border-primary/20 rounded-full px-3 py-1">
+                                        <p className="text-primary text-xs font-bold uppercase tracking-wider">
+                                            Promoción válida por el resto de mayo
+                                        </p>
+                                    </div>
+
                                     {/* Description */}
                                     <p className="text-gray-600 text-sm leading-relaxed">
                                         En compras mayores de{' '}
