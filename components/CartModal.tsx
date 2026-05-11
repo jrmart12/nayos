@@ -61,6 +61,16 @@ async function runOCR(file: File, expectedAmount: number) {
 import { useRouter } from 'next/navigation';
 import { track } from '@/lib/umami';
 
+// --- Free shipping helpers ---
+function isFreeShippingDay(): boolean {
+    const day = new Date().getDay(); // 0=Dom, 1=Lun … 5=Vie, 6=Sáb
+    return day >= 1 && day <= 5;
+}
+
+function isEligibleForFreeShipping(subtotal: number): boolean {
+    return subtotal >= 300 && isFreeShippingDay();
+}
+
 export default function CartModal({ settings }: { settings?: any }) {
     const { items, isOpen, setIsOpen, removeFromCart, updateQuantity, totalPrice, customer, setCustomer, deliveryMethod, setDeliveryMethod, deliveryPrice, setDeliveryPrice } = useCart();
     const [currentStep, setCurrentStep] = useState<'cart' | 'checkout'>('cart');
@@ -142,6 +152,19 @@ export default function CartModal({ settings }: { settings?: any }) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsHydrated(true);
     }, []);
+
+    // Auto-apply / remove free shipping when cart total changes
+    useEffect(() => {
+        if (deliveryMethod !== 'delivery' || !customer?.deliveryCoords) return;
+        const { lat, lng } = customer.deliveryCoords;
+        if (isEligibleForFreeShipping(totalPrice)) {
+            setDeliveryPrice(0);
+        } else {
+            const price = lat === 0 && lng === 0 ? 120 : calculateDeliveryPrice(lat, lng);
+            setDeliveryPrice(price);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [totalPrice]);
 
     if (!isHydrated) return null;
 
@@ -390,8 +413,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
-                                        {items.map(item => (
-                                            <motion.div
+                                        {items.map(item => (                                            <motion.div
                                                 layout
                                                 key={item.id}
                                                 className="bg-white rounded-xl p-4 flex gap-4 border border-gray-100 shadow-sm"
@@ -481,6 +503,39 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                 </div>
                                             </motion.div>
                                         ))}
+
+                                        {/* Free shipping progress banner */}
+                                        {isFreeShippingDay() && (
+                                            <motion.div
+                                                layout
+                                                initial={{ opacity: 0, y: 8 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className={`rounded-xl p-3 border text-sm ${isEligibleForFreeShipping(totalPrice)
+                                                    ? 'bg-green-50 border-green-200'
+                                                    : 'bg-amber-50 border-amber-200'
+                                                    }`}
+                                            >
+                                                {isEligibleForFreeShipping(totalPrice) ? (
+                                                    <p className="font-bold text-green-700 text-center">
+                                                        🎉 ¡Envío gratis aplicado! Tu pedido supera L. 300
+                                                    </p>
+                                                ) : (
+                                                    <div className="space-y-2">
+                                                        <p className="text-amber-800 text-xs text-center">
+                                                            🛵 Agrega{' '}
+                                                            <span className="font-black">L. {Math.max(0, 300 - totalPrice).toFixed(2)}</span>{' '}
+                                                            más y obtén <span className="font-black">envío gratis</span> hoy
+                                                        </p>
+                                                        <div className="w-full bg-amber-200 rounded-full h-1.5">
+                                                            <div
+                                                                className="bg-primary h-1.5 rounded-full transition-all duration-500"
+                                                                style={{ width: `${Math.min(100, (totalPrice / 300) * 100)}%` }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </motion.div>
+                                        )}
                                     </div>
                                 )
                             ) : (
@@ -578,7 +633,9 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                             });
                                                         }
                                                         // Calculate delivery price - if coords are 0,0 (manual entry), use fixed price
-                                                        if (coords.lat === 0 && coords.lng === 0) {
+                                                        if (isEligibleForFreeShipping(totalPrice)) {
+                                                            setDeliveryPrice(0);
+                                                        } else if (coords.lat === 0 && coords.lng === 0) {
                                                             setDeliveryPrice(120); // Fixed price for manual address entry
                                                         } else {
                                                             const price = calculateDeliveryPrice(coords.lat, coords.lng);
@@ -586,14 +643,21 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                         }
                                                     }}
                                                 />
-                                                {deliveryPrice > 0 && (
+                                                {isEligibleForFreeShipping(totalPrice) && customer?.deliveryCoords ? (
+                                                    <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                                        <p className="text-green-700 text-sm flex justify-between">
+                                                            <span>Costo de envío:</span>
+                                                            <span className="font-bold">¡GRATIS! 🎉</span>
+                                                        </p>
+                                                    </div>
+                                                ) : deliveryPrice > 0 ? (
                                                     <div className="mt-2 p-3 bg-blue-50 border border-blue-100 rounded-lg">
                                                         <p className="text-blue-600 text-sm flex justify-between">
                                                             <span>Costo de envío estimado:</span>
                                                             <span className="font-bold text-foreground">{formatPrice(deliveryPrice)}</span>
                                                         </p>
                                                     </div>
-                                                )}
+                                                ) : null}
                                             </div>
                                         )}
 
@@ -958,7 +1022,11 @@ export default function CartModal({ settings }: { settings?: any }) {
                                     {deliveryMethod === 'delivery' && (
                                         <div className="flex items-center justify-between text-sm text-gray-500">
                                             <span>Envío</span>
-                                            <span className="font-mono text-gray-900">{deliveryPrice > 0 ? `L. ${deliveryPrice.toFixed(2)}` : 'Por calcular'}</span>
+                                            {isEligibleForFreeShipping(totalPrice) && customer?.deliveryCoords ? (
+                                                <span className="font-bold text-green-600">¡GRATIS! 🎉</span>
+                                            ) : (
+                                                <span className="font-mono text-gray-900">{deliveryPrice > 0 ? `L. ${deliveryPrice.toFixed(2)}` : 'Por calcular'}</span>
+                                            )}
                                         </div>
                                     )}
                                     <div className="flex items-center justify-between text-xl font-black uppercase pt-4 border-t border-dashed border-gray-300">

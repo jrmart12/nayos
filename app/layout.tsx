@@ -5,6 +5,7 @@ import "./globals.css";
 import { CartProvider } from "@/contexts/CartContext";
 import CartButton from "@/components/CartButton";
 import CartModal from "@/components/CartModal";
+import FreeShippingBanner from "@/components/FreeShippingBanner";
 import { client } from "@/lib/sanity";
 import PageviewTracker from "@/components/PageviewTracker";
 
@@ -193,6 +194,7 @@ export default async function RootLayout({
           {children}
           <CartButton />
           <CartModal settings={settings} />
+          <FreeShippingBanner />
         </CartProvider>
         <script defer src="https://cloud.umami.is/script.js" data-website-id="abe99048-96b0-4386-bd61-7ddd398183bc" data-domains="nayosburger.com" />
       </body>
