@@ -1,18 +1,21 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 
 export default function FreeShippingBanner() {
     const [isVisible, setIsVisible] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
+        if (pathname !== '/') return;
         const timer = setTimeout(() => {
             setIsVisible(true);
         }, 1800);
         return () => clearTimeout(timer);
-    }, []);
+    }, [pathname]);
 
     const handleClose = () => {
         setIsVisible(false);
