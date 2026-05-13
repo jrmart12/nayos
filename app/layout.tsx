@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Oswald, Caveat } from "next/font/google";
 import Image from "next/image";
+import Script from "next/script";
 import "./globals.css";
 import { CartProvider } from "@/contexts/CartContext";
 import CartButton from "@/components/CartButton";
@@ -197,6 +198,36 @@ export default async function RootLayout({
           <FreeShippingBanner />
         </CartProvider>
         <script defer src="https://cloud.umami.is/script.js" data-website-id="abe99048-96b0-4386-bd61-7ddd398183bc" data-domains="nayosburger.com" />
+
+        {/* Meta Pixel */}
+        <Script
+          id="meta-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '1281906720722786');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
+        <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            height="1"
+            width="1"
+            style={{ display: 'none' }}
+            src="https://www.facebook.com/tr?id=1281906720722786&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
       </body>
     </html>
   );
