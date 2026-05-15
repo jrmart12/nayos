@@ -197,7 +197,12 @@ export default async function RootLayout({
           <CartModal settings={settings} />
           <FreeShippingBanner />
         </CartProvider>
-        <script defer src="https://cloud.umami.is/script.js" data-website-id="abe99048-96b0-4386-bd61-7ddd398183bc" data-domains="nayosburger.com" />
+        <Script
+          src="https://cloud.umami.is/script.js"
+          data-website-id="abe99048-96b0-4386-bd61-7ddd398183bc"
+          data-domains="nayosburger.com"
+          strategy="afterInteractive"
+        />
 
         {/* Meta Pixel */}
         <Script
