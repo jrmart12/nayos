@@ -27,18 +27,34 @@ export async function GET(request: NextRequest) {
   const monthStart = new Date(year, mon - 1, 1).toISOString();
   const monthEnd = new Date(year, mon, 1).toISOString();
 
-  const { data, error } = await supabase
-    .from('page_views')
-    .select('path, referrer, created_at')
-    .gte('created_at', monthStart)
-    .lt('created_at', monthEnd)
-    .order('created_at', { ascending: true });
+  // Supabase defaults to 1000 rows per query — paginate to fetch all records
+  const PAGE_SIZE = 1000;
+  const rows: { path: string; referrer: string | null; created_at: string }[] = [];
+  let from = 0;
+  let done = false;
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  while (!done) {
+    const { data, error } = await supabase
+      .from('page_views')
+      .select('path, referrer, created_at')
+      .gte('created_at', monthStart)
+      .lt('created_at', monthEnd)
+      .order('created_at', { ascending: true })
+      .range(from, from + PAGE_SIZE - 1);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    const page = data || [];
+    rows.push(...page);
+
+    if (page.length < PAGE_SIZE) {
+      done = true;
+    } else {
+      from += PAGE_SIZE;
+    }
   }
-
-  const rows = data || [];
 
   // Daily views
   const dailyMap: Record<string, number> = {};
