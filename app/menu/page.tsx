@@ -1,5 +1,6 @@
 import { client, PRODUCTS_QUERY, SITE_SETTINGS_QUERY } from '@/lib/sanity'
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import MenuProducts from '@/components/MenuProducts'
@@ -47,7 +48,9 @@ export default async function ProductsPage() {
 
                 {/* Products with Category Tabs */}
                 {products && products.length > 0 ? (
-                    <MenuProducts products={products} />
+                    <Suspense fallback={<div className="py-20 text-center text-gray-500">Cargando menú...</div>}>
+                        <MenuProducts products={products} />
+                    </Suspense>
                 ) : (
                     <section className="py-20">
                         <div className="container mx-auto px-4 text-center">
