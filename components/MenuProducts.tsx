@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { urlFor } from '@/sanity/lib/image'
@@ -38,7 +39,11 @@ const categoryConfig: Record<string, { icon: string; label: string; order: numbe
 const ITEMS_PER_PAGE = 4
 
 export default function MenuProducts({ products }: MenuProductsProps) {
-    const [selectedCategory, setSelectedCategory] = useState('all')
+    const searchParams = useSearchParams()
+    const [selectedCategory, setSelectedCategory] = useState(() => {
+        const cat = searchParams.get('category')
+        return cat && categoryConfig[cat] ? cat : 'all'
+    })
     const [page, setPage] = useState(0)
     const [isMobile, setIsMobile] = useState(false)
     const productsGridRef = useRef<HTMLDivElement | null>(null)
