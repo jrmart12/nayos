@@ -141,7 +141,7 @@ export default function MenuProducts({ products }: MenuProductsProps) {
                         <div className="space-y-12 max-w-6xl mx-auto">
                             {paginatedProducts.map((product, index) => {
                                 const imageUrl = product.image
-                                    ? urlFor(product.image).width(800).height(600).url()
+                                    ? urlFor(product.image).width(800).url()
                                     : null
                                 const isEven = index % 2 === 0
 
@@ -152,7 +152,7 @@ export default function MenuProducts({ products }: MenuProductsProps) {
                                         className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center group cursor-pointer"
                                     >
                                         {/* Product Image - Alternates between left and right */}
-                                        <div className={`relative h-48 md:h-80 rounded-3xl overflow-hidden shadow-2xl border-4 border-[#9B292C] ${isEven ? 'order-1' : 'order-1 md:order-2'}`}>
+                                        <div className={`relative aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-[#9B292C] ${isEven ? 'order-1' : 'order-1 md:order-2'}`}>
                                             {imageUrl ? (
                                                 <Image
                                                     src={imageUrl}

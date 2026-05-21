@@ -196,10 +196,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     <div className="container mx-auto px-4 max-w-6xl">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center mb-12">
                             {/* Product Image */}
-                            <div className="relative h-64 md:h-96 lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl border-4 border-[#9B292C] order-1">
+                            <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-[#9B292C] order-1">
                                 {product.image ? (
                                     <Image
-                                        src={urlFor(product.image).width(1000).height(1200).url()}
+                                        src={urlFor(product.image).width(1000).url()}
                                         alt={product.name}
                                         fill
                                         className="object-cover"

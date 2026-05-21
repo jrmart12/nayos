@@ -81,7 +81,7 @@ export default function FeaturedBurgers({ products = [] }: FeaturedBurgersProps)
                 <div className="space-y-12 max-w-6xl mx-auto mb-16">
                     {displayProducts.map((product, index) => {
                         const imageUrl = product.image
-                            ? urlFor(product.image).width(800).height(600).url()
+                            ? urlFor(product.image).width(800).url()
                             : placeholderImages[index % placeholderImages.length];
 
                         const isEven = index % 2 === 0;
@@ -99,7 +99,7 @@ export default function FeaturedBurgers({ products = [] }: FeaturedBurgersProps)
                                     className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center group cursor-pointer"
                                 >
                                     {/* Burger Image - Alternates between left and right */}
-                                    <div className={`relative h-48 md:h-80 rounded-3xl overflow-hidden shadow-2xl border-4 border-[#9B292C] ${isEven ? 'order-1' : 'order-1 md:order-2'}`}>
+                                    <div className={`relative aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-[#9B292C] ${isEven ? 'order-1' : 'order-1 md:order-2'}`}>
                                         <Image
                                             src={imageUrl}
                                             alt={product.name}

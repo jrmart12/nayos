@@ -89,7 +89,7 @@ export default function Products({ title, description, products }: ProductsProps
                                                 src={urlFor(product.image).width(500).height(500).url()}
                                                 alt={product.name}
                                                 fill
-                                                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                                className="object-cover w-full h-full"
                                             />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-muted bg-gray-100">
