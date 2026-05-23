@@ -9,6 +9,7 @@ import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import Link from 'next/link'
 import ProductCutSelector from '@/components/ProductCutSelector'
 import { PortableText } from '@portabletext/react'
+import OgComboPromoSection from '@/components/OgComboPromoSection'
 
 interface ProductCut {
     weight: string
@@ -304,6 +305,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
                                 </div>
                             </div>
                         )}
+
+                        {/* OG Combo Promo — solo May 23, 2026 */}
+                        {(() => {
+                            const now = new Date();
+                            const isPromoDay = now.getFullYear() === 2026 && now.getMonth() === 4 && now.getDate() === 23;
+                            return isPromoDay && slug === 'the-og-combo' ? <OgComboPromoSection /> : null;
+                        })()}
 
                         {/* Product Cut Selector */}
                         <div className="mt-12">
