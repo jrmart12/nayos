@@ -310,7 +310,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         {(() => {
                             const now = new Date();
                             const isPromoDay = now.getFullYear() === 2026 && now.getMonth() === 4 && now.getDate() === 23;
-                            return isPromoDay && slug === 'the-og-combo' ? <OgComboPromoSection /> : null;
+                            const disabled = process.env.NEXT_PUBLIC_DISABLE_OG_COMBO_POPUP === 'true';
+                            return isPromoDay && !disabled && slug === 'the-og-combo' ? <OgComboPromoSection /> : null;
                         })()}
 
                         {/* Product Cut Selector */}
