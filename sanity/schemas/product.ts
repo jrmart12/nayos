@@ -32,7 +32,6 @@ export default defineType({
                     { title: 'Acompañamientos', value: 'acompanamientos' },
                     { title: 'Bebidas', value: 'bebidas' },
                     { title: 'Combos', value: 'combos' },
-                    { title: 'Special Combos', value: 'special-combos' },
                     { title: 'Nayos Signatures', value: 'nayos-signatures' },
                 ],
             },

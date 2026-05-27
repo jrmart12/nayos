@@ -30,8 +30,7 @@ const categoryConfig: Record<string, { icon: string; label: string; order: numbe
     'hamburguesas': { icon: '🍔', label: 'Burgers', order: 1 },
     'pollo': { icon: '🍗', label: 'Pollo', order: 2 },
     'combos': { icon: '🎉', label: 'Combos', order: 3 },
-    'special-combos': { icon: '⭐', label: 'Special Combos', order: 4 },
-    'nayos-signatures': { icon: '✨', label: 'Nayos Signatures', order: 5 },
+    'nayos-signatures': { icon: '✨', label: 'Nayos Signatures', order: 4 },
     'acompanamientos': { icon: '🍟', label: 'Acompañamientos', order: 6 },
     'bebidas': { icon: '🥤', label: 'Bebidas', order: 7 },
 }
