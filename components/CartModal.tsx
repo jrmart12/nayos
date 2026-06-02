@@ -6,7 +6,7 @@ import { X, ShoppingCart, Trash2, Plus, Minus, Send, ArrowLeft } from 'lucide-re
 import { motion, AnimatePresence } from 'framer-motion';
 import { urlFor } from '@/sanity/lib/image';
 import LocationPicker from './LocationPicker';
-import { calculateDeliveryPrice, formatPrice } from '@/lib/deliveryUtils';
+import { calculateDeliveryPrice, formatPrice, getEffectiveDeliveryPrice } from '@/lib/deliveryUtils';
 import { upload } from '@vercel/blob/client';
 import { compressImage } from '@/lib/imageUtils';
 import { saveOrder } from '@/lib/saveOrder';
@@ -157,12 +157,8 @@ export default function CartModal({ settings }: { settings?: any }) {
     useEffect(() => {
         if (deliveryMethod !== 'delivery' || !customer?.deliveryCoords) return;
         const { lat, lng } = customer.deliveryCoords;
-        if (isEligibleForFreeShipping(totalPrice)) {
-            setDeliveryPrice(0);
-        } else {
-            const price = lat === 0 && lng === 0 ? 120 : calculateDeliveryPrice(lat, lng);
-            setDeliveryPrice(price);
-        }
+        const basePrice = lat === 0 && lng === 0 ? 120 : calculateDeliveryPrice(lat, lng);
+        setDeliveryPrice(getEffectiveDeliveryPrice(basePrice, totalPrice));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [totalPrice]);
 
@@ -548,11 +544,11 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                 setDeliveryMethod('delivery');
                                                 // Recalculate price if we have stored coordinates
                                                 if (customer?.deliveryCoords) {
-                                                    const price = calculateDeliveryPrice(
+                                                    const basePrice = calculateDeliveryPrice(
                                                         customer.deliveryCoords.lat,
                                                         customer.deliveryCoords.lng
                                                     );
-                                                    setDeliveryPrice(price);
+                                                    setDeliveryPrice(getEffectiveDeliveryPrice(basePrice, totalPrice));
                                                 }
                                             }}
                                             className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${deliveryMethod === 'delivery'
@@ -633,17 +629,11 @@ export default function CartModal({ settings }: { settings?: any }) {
                                                             });
                                                         }
                                                         // Calculate delivery price - if coords are 0,0 (manual entry), use fixed price
-                                                        if (isEligibleForFreeShipping(totalPrice)) {
-                                                            setDeliveryPrice(0);
-                                                        } else if (coords.lat === 0 && coords.lng === 0) {
-                                                            setDeliveryPrice(120); // Fixed price for manual address entry
-                                                        } else {
-                                                            const price = calculateDeliveryPrice(coords.lat, coords.lng);
-                                                            setDeliveryPrice(price);
-                                                        }
+                                                        const basePrice = coords.lat === 0 && coords.lng === 0 ? 120 : calculateDeliveryPrice(coords.lat, coords.lng);
+                                                        setDeliveryPrice(getEffectiveDeliveryPrice(basePrice, totalPrice));
                                                     }}
                                                 />
-                                                {isEligibleForFreeShipping(totalPrice) && customer?.deliveryCoords ? (
+                                                {deliveryPrice === 0 && customer?.deliveryCoords ? (
                                                     <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
                                                         <p className="text-green-700 text-sm flex justify-between">
                                                             <span>Costo de envío:</span>
@@ -1022,7 +1012,7 @@ export default function CartModal({ settings }: { settings?: any }) {
                                     {deliveryMethod === 'delivery' && (
                                         <div className="flex items-center justify-between text-sm text-gray-500">
                                             <span>Envío</span>
-                                            {isEligibleForFreeShipping(totalPrice) && customer?.deliveryCoords ? (
+                                            {deliveryPrice === 0 && customer?.deliveryCoords ? (
                                                 <span className="font-bold text-green-600">¡GRATIS! 🎉</span>
                                             ) : (
                                                 <span className="font-mono text-gray-900">{deliveryPrice > 0 ? `L. ${deliveryPrice.toFixed(2)}` : 'Por calcular'}</span>

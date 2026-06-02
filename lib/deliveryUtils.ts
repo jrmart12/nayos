@@ -42,6 +42,27 @@ export const calculateDeliveryPrice = (lat: number, lng: number): number => {
 };
 
 /**
+ * Returns true if today is Monday–Friday (free shipping eligible day)
+ */
+export const isFreeShippingDay = (): boolean => {
+    const day = new Date().getDay(); // 0=Sun, 1=Mon…5=Fri, 6=Sat
+    return day >= 1 && day <= 5;
+};
+
+/**
+ * Apply the Mon–Fri / ≥300 lps promotion to a base delivery price:
+ *   - Inside zone (50 lps) → FREE (0)
+ *   - Outside zone (120 lps) → 50 lps
+ */
+export const getEffectiveDeliveryPrice = (basePrice: number, subtotal: number): number => {
+    if (subtotal >= 300 && isFreeShippingDay()) {
+        if (basePrice === PRICE_INSIDE) return 0;
+        if (basePrice === PRICE_OUTSIDE) return PRICE_INSIDE;
+    }
+    return basePrice;
+};
+
+/**
  * Format price as Honduran Lempiras currency
  */
 export const formatPrice = (amount: number): string => {
