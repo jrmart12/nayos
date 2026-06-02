@@ -180,6 +180,45 @@ export default defineType({
             ],
         }),
         defineField({
+            name: 'comboOptions',
+            title: 'Opciones de Combo',
+            type: 'array',
+            description: 'Botones de combo que aparecen en la página del producto (ej: "Combo con papas y refresco" a L.299)',
+            of: [
+                {
+                    type: 'object',
+                    fields: [
+                        {
+                            name: 'label',
+                            title: 'Texto del Botón',
+                            type: 'string',
+                            description: 'Ej: "Combo con papas y refresco"',
+                            validation: (Rule) => Rule.required(),
+                        },
+                        {
+                            name: 'price',
+                            title: 'Precio del Combo',
+                            type: 'number',
+                            description: 'Precio total al seleccionar este combo',
+                            validation: (Rule) => Rule.required().positive(),
+                        },
+                    ],
+                    preview: {
+                        select: {
+                            label: 'label',
+                            price: 'price',
+                        },
+                        prepare({ label, price }) {
+                            return {
+                                title: label,
+                                subtitle: `L. ${price}`,
+                            }
+                        },
+                    },
+                },
+            ],
+        }),
+        defineField({
             name: 'allowSpecialInstructions',
             title: 'Permitir Indicaciones Especiales',
             type: 'boolean',

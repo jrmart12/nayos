@@ -44,6 +44,7 @@ interface Product {
     unit?: string
     options?: ProductOption[]
     allowSpecialInstructions?: boolean
+    comboOptions?: { label: string; price: number }[]
     nutritionalInfo?: {
         calories?: number
         protein?: number
@@ -102,6 +103,7 @@ async function getProduct(slug: string): Promise<Product | null> {
     unit,
     options,
     allowSpecialInstructions,
+    comboOptions,
     nutritionalInfo,
     preparation,
     origin,
@@ -324,6 +326,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                                     cuts: product.cuts,
                                     options: product.options,
                                     allowSpecialInstructions: product.allowSpecialInstructions,
+                                    comboOptions: product.comboOptions,
                                     image: product.image,
                                     slug: product.slug.current,
                                 }}

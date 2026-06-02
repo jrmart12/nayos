@@ -20,6 +20,11 @@ interface ProductOption {
     }[]
 }
 
+interface ComboOption {
+    label: string
+    price: number
+}
+
 interface ProductCutSelectorProps {
     product: {
         _id: string
@@ -28,6 +33,7 @@ interface ProductCutSelectorProps {
         cuts?: ProductCut[]
         options?: ProductOption[]
         allowSpecialInstructions?: boolean
+        comboOptions?: ComboOption[]
         image?: SanityImageSource
         slug: string
     }
@@ -39,6 +45,7 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
     const [selectedOptions, setSelectedOptions] = useState<Record<string, Array<{ label: string; quantity: number }>>>({})
     const [specialInstructions, setSpecialInstructions] = useState('')
     const [expandedOption, setExpandedOption] = useState<number | null>(null)
+    const [selectedCombo, setSelectedCombo] = useState<ComboOption | null>(null)
 
     const hasCuts = product.cuts && product.cuts.length > 0
     const hasOptions = product.options && product.options.length > 0
@@ -180,6 +187,8 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
     }
 
     const calculateTotalPrice = (): number => {
+        if (selectedCombo) return selectedCombo.price
+
         let basePrice = 0
 
         if (hasCuts && selectedCut) {
@@ -221,7 +230,7 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
 
         addToCart({
             _id: `${product._id}-${selectedCut?.weight || 'default'}`,
-            name: product.name,
+            name: selectedCombo ? `${product.name} (${selectedCombo.label})` : product.name,
             price: totalPrice,
             image: product.image,
             slug: product.slug,
@@ -236,32 +245,76 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
         setSelectedOptions({})
         setSpecialInstructions('')
         setExpandedOption(null)
+        setSelectedCombo(null)
     }
 
     // If no cuts and no options, just show simple add to cart
     if (!hasCuts && !hasOptions) {
+        const hasComboOptions = product.comboOptions && product.comboOptions.length > 0
+        const finalPrice = selectedCombo ? selectedCombo.price : (product.price || 0)
         return (
             <div className="space-y-4">
-                {/* Price Summary */}
-                {product.price && (
-                    <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6 shadow-xl">
-                        <div className="flex justify-between items-center">
-                            <span className="text-gray-700 text-lg font-bold uppercase">Precio:</span>
-                            <span className="text-[#9B292C] text-3xl md:text-4xl font-black" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>L{product.price.toFixed(0)}</span>
+                {/* Combo Options */}
+                {hasComboOptions && (
+                    <div>
+                        <h3 className="text-xl md:text-2xl font-black text-[#9B292C] mb-4 uppercase tracking-tight" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>
+                            ¿Cómo lo quieres?
+                        </h3>
+                        <div className="flex flex-col gap-3">
+                            {/* Solo button */}
+                            <button
+                                onClick={() => setSelectedCombo(null)}
+                                className={`w-full py-4 px-6 rounded-2xl border-4 font-black text-base md:text-lg uppercase tracking-wide transition-all ${
+                                    !selectedCombo
+                                        ? 'bg-[#9B292C] border-[#9B292C] text-white shadow-2xl scale-[1.02]'
+                                        : 'bg-white border-[#9B292C] text-[#9B292C] hover:bg-red-50'
+                                }`}
+                                style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}
+                            >
+                                <span>Solo</span>
+                                {product.price && (
+                                    <span className="ml-3 opacity-80">L{product.price.toFixed(0)}</span>
+                                )}
+                            </button>
+                            {/* Combo buttons */}
+                            {product.comboOptions!.map((combo, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setSelectedCombo(combo)}
+                                    className={`w-full py-4 px-6 rounded-2xl border-4 font-black text-base md:text-lg uppercase tracking-wide transition-all ${
+                                        selectedCombo?.label === combo.label
+                                            ? 'bg-[#9B292C] border-[#9B292C] text-white shadow-2xl scale-[1.02]'
+                                            : 'bg-white border-[#9B292C] text-[#9B292C] hover:bg-red-50'
+                                    }`}
+                                    style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}
+                                >
+                                    <span>{combo.label}</span>
+                                    <span className="ml-3 opacity-80">L{combo.price.toFixed(0)}</span>
+                                </button>
+                            ))}
                         </div>
                     </div>
                 )}
+
+                {/* Price Summary */}
+                <div className="bg-white border-4 border-[#9B292C] rounded-2xl p-6 shadow-xl">
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-700 text-lg font-bold uppercase">Precio:</span>
+                        <span className="text-[#9B292C] text-3xl md:text-4xl font-black" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>L{finalPrice.toFixed(0)}</span>
+                    </div>
+                </div>
                 
                 <button
                     onClick={() => {
                         addToCart({
                             _id: product._id,
-                            name: product.name,
-                            price: product.price || 0,
+                            name: selectedCombo ? `${product.name} (${selectedCombo.label})` : product.name,
+                            price: finalPrice,
                             image: product.image,
                             slug: product.slug,
                             unit: 'porción'
                         })
+                        setSelectedCombo(null)
                     }}
                     className="w-full py-5 md:py-6 rounded-2xl font-black text-lg md:text-xl bg-[#9B292C] hover:bg-[#7A2123] text-white border-4 border-[#9B292C] hover:scale-105 transition-all flex items-center justify-center gap-3 uppercase tracking-wide shadow-2xl"
                     style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}
@@ -277,6 +330,48 @@ export default function ProductCutSelector({ product }: ProductCutSelectorProps)
 
     return (
         <div className="space-y-4">
+            {/* Combo Options */}
+            {product.comboOptions && product.comboOptions.length > 0 && (
+                <div>
+                    <h3 className="text-xl md:text-2xl font-black text-[#9B292C] mb-4 uppercase tracking-tight" style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}>
+                        ¿Cómo lo quieres?
+                    </h3>
+                    <div className="flex flex-col gap-3">
+                        {/* Solo button */}
+                        <button
+                            onClick={() => setSelectedCombo(null)}
+                            className={`w-full py-4 px-6 rounded-2xl border-4 font-black text-base md:text-lg uppercase tracking-wide transition-all ${
+                                !selectedCombo
+                                    ? 'bg-[#9B292C] border-[#9B292C] text-white shadow-2xl scale-[1.02]'
+                                    : 'bg-white border-[#9B292C] text-[#9B292C] hover:bg-red-50'
+                            }`}
+                            style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}
+                        >
+                            <span>Solo</span>
+                            {(selectedCut?.price ?? product.price) && (
+                                <span className="ml-3 opacity-80">L{(selectedCut?.price ?? product.price)!.toFixed(0)}</span>
+                            )}
+                        </button>
+                        {/* Combo buttons */}
+                        {product.comboOptions.map((combo, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setSelectedCombo(combo)}
+                                className={`w-full py-4 px-6 rounded-2xl border-4 font-black text-base md:text-lg uppercase tracking-wide transition-all ${
+                                    selectedCombo?.label === combo.label
+                                        ? 'bg-[#9B292C] border-[#9B292C] text-white shadow-2xl scale-[1.02]'
+                                        : 'bg-white border-[#9B292C] text-[#9B292C] hover:bg-red-50'
+                                }`}
+                                style={{ fontFamily: 'Impact, Haettenschweiler, sans-serif' }}
+                            >
+                                <span>{combo.label}</span>
+                                <span className="ml-3 opacity-80">L{combo.price.toFixed(0)}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Cut Selector */}
             {hasCuts && availableCuts.length > 0 && (
                 <div>
