@@ -17,6 +17,8 @@ const BRIDGES: BridgeCoordinate[] = [
 // Delivery prices
 const PRICE_INSIDE = 50;  // 50 Lps inside the bridge zone (between the bridges along the coast)
 const PRICE_OUTSIDE = 120; // 120 Lps outside the zone (beyond the bridges)
+const INSIDE_STANDARD_PRICE = 60;  // Inside the urban core (casco urbano), standard charge
+const OUTSIDE_PROMO_PRICE = 60;    // Outside the zone, Mon–Fri with subtotal ≥ 300
 
 /**
  * Calculate delivery price based on location
@@ -50,15 +52,27 @@ export const isFreeShippingDay = (): boolean => {
 };
 
 /**
- * Apply the Mon–Fri / ≥300 lps promotion to a base delivery price:
- *   - Inside zone (50 lps) → FREE (0)
- *   - Outside zone (120 lps) → 50 lps
+ * Apply the day-of-week delivery pricing to a base delivery price:
+ *   Inside zone (casco urbano):
+ *     - Mon–Fri with subtotal ≥ 300 → FREE (0)
+ *     - Otherwise (Mon–Fri < 300, or Sat–Sun) → 60 lps
+ *   Outside zone:
+ *     - Mon–Fri with subtotal ≥ 300 → 60 lps
+ *     - Otherwise (Mon–Fri < 300, or Sat–Sun) → 120 lps
  */
 export const getEffectiveDeliveryPrice = (basePrice: number, subtotal: number): number => {
-    if (subtotal >= 300 && isFreeShippingDay()) {
-        if (basePrice === PRICE_INSIDE) return 0;
-        if (basePrice === PRICE_OUTSIDE) return PRICE_INSIDE;
+    const qualifiesForPromo = isFreeShippingDay() && subtotal >= 300; // Mon–Fri & ≥ 300
+
+    // Inside the urban core (casco urbano)
+    if (basePrice === PRICE_INSIDE) {
+        return qualifiesForPromo ? 0 : INSIDE_STANDARD_PRICE;
     }
+
+    // Outside the zone
+    if (basePrice === PRICE_OUTSIDE) {
+        return qualifiesForPromo ? OUTSIDE_PROMO_PRICE : PRICE_OUTSIDE;
+    }
+
     return basePrice;
 };
 
