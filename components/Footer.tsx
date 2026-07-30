@@ -22,11 +22,11 @@ export default function Footer({ settings }: FooterProps) {
                     <div className="col-span-1 md:col-span-2">
                         <div className="mb-6 flex items-center">
                             <Image
-                                src="/nayos_logo.png"
-                                alt="Nayos Logo"
-                                width={160}
-                                height={160}
-                                className="object-contain mr-3"
+                                src="/brand/mascot-waving.png"
+                                alt="Nayos"
+                                width={533}
+                                height={599}
+                                className="object-contain h-28 w-auto"
                             />
                         </div>
                         <p className="text-muted max-w-md mb-6">

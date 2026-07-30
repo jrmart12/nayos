@@ -38,14 +38,11 @@ export default function Navbar({ settings }: NavbarProps) {
 
     const defaultNavLinks = [
         { label: "Inicio", link: "/" },
-        { label: "Menú", link: "/menu" },
-        { label: "Nosotros", link: "#about" },
         { label: "Contacto", link: "#contact" },
     ];
 
-    const navLinks = settings?.navigation?.menuItems || defaultNavLinks;
-    const leftLinks = navLinks.slice(0, 2);
-    const rightLinks = navLinks.slice(2);
+    // Guía de marca: solo Inicio y Contacto en el navbar
+    const navLinks = defaultNavLinks;
 
     const resolveLink = (link: string) => {
         if (link.startsWith('#')) {
@@ -70,55 +67,38 @@ export default function Navbar({ settings }: NavbarProps) {
 
     return (
         <>
-            {/* Top Burgundy Bar */}
-            <div className="top-0 left-0 right-0 z-50 bg-[#9B292C] h-3"></div>
 
             {/* Main Navbar */}
             <nav className=" top-3 left-0 right-0 z-50 bg-[#FFF8F0] shadow-lg">
-                <div className="container mx-auto px-4 py-4">
+                <div className="container mx-auto px-4 py-4 md:py-5">
                     <div className="flex items-center justify-between">
-                        {/* Left - Stacked Navigation Buttons (Desktop) */}
-                        <div className="hidden md:flex flex-col gap-2">
+                        {/* Left - Logo (script) */}
+                        <Link href="/" className="flex-shrink-0">
+                            <Image
+                                src="/brand/nayos_logo_transparent.png"
+                                alt="Nayos Burger"
+                                width={524}
+                                height={222}
+                                className="h-12 md:h-14 w-auto"
+                                priority
+                            />
+                        </Link>
+
+                        {/* Right - Horizontal Navigation + Cart (Desktop) */}
+                        <div className="hidden md:flex items-center gap-3">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.label}
                                     href={resolveLink(link.link)}
                                     onClick={(e) => handleNavClick(e, link.link)}
-                                    className="border-2 border-[#9B292C] bg-[#FFF8F0] text-[#9B292C] px-6 py-2 rounded-full font-bold uppercase text-xs hover:bg-[#9B292C] hover:text-white transition-all text-center min-w-[140px]"
+                                    className="border-2 border-[#9B292C] bg-[#FFF8F0] text-[#9B292C] px-7 py-2.5 rounded-full font-bold uppercase text-xs tracking-wider hover:bg-[#9B292C] hover:text-white transition-all text-center"
                                 >
                                     {link.label}
                                 </Link>
                             ))}
-                        </div>
-
-                        {/* Center - Logo */}
-                        <Link href="/" className="flex-shrink-0">
-                            <Image
-                                src="/logo.svg"
-                                alt="Nayos"
-                                width={400}
-                                height={40}
-                                className="h-40 w-auto"
-                                priority
-                            />
-                        </Link>
-
-                        {/* Right - Order Button & Cart (Desktop) */}
-                        <div className="hidden md:flex items-center gap-4">
-                            <button
-                                onClick={() => setCartOpen(true)}
-                                className="relative text-[#9B292C] hover:text-[#7A2123] transition-colors"
-                            >
-                                <ShoppingCart size={24} />
-                                {totalItems > 0 && (
-                                    <span className="absolute -top-2 -right-2 bg-[#9B292C] text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                                        {totalItems}
-                                    </span>
-                                )}
-                            </button>
                             <a
                                 href="/menu"
-                                className="bg-[#9B292C] text-white px-8 py-4 rounded-full font-black uppercase text-sm hover:bg-[#7A2123] transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                                className="bg-[#9B292C] text-white px-7 py-2.5 rounded-full font-black uppercase text-xs tracking-wider hover:bg-[#7A2123] transition-all shadow-lg hover:shadow-xl hover:scale-105"
                             >
                                 ¡Ordena Ahora!
                             </a>

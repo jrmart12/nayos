@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pdftoppm -f 26 -l 26 -r 300 -png \"/Volumes/JR/Documents/side-projects/nayos/NAYOS  MANUAL DE IDENTIDAD.pdf\" webguide)",
+      "Bash(pip3 install *)",
+      "Bash(python3 -)",
+      "Bash(sips -g pixelWidth -g pixelHeight phone-frame.png background-section1.png)",
+      "Bash(python3 -c ' *)",
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,codec_type -of default=noprint_wrappers=1 /Volumes/JR/Documents/side-projects/nayos/public/burger-video.MOV)",
+      "Bash(ffmpeg -y -i burger-video.MOV -c:v libx264 -preset medium -crf 23 -c:a aac -movflags +faststart burger-video.mp4)"
+    ]
+  }
+}

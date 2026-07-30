@@ -38,21 +38,16 @@ export default function DeliverySection({ delivery, phone, logo }: DeliverySecti
     }
 
     return (
-        <section id="contact" className="py-20 bg-transparent relative overflow-hidden">
-            {/* Top Left Checkered Pattern */}
-            <div className="hidden md:block absolute top-0 left-0 w-64 md:w-96 opacity-80 z-0">
-                <CheckeredPattern className="w-full h-auto" />
-            </div>
+        <section id="contact" className="py-5 bg-transparent relative overflow-hidden">
+   
 
             <div className="container mx-auto px-4 relative z-10">
                 <div className="max-w-7xl mx-auto">
                     {/* Title Section */}
-                    <div className="text-center mb-12">
-                        <div className="inline-block bg-white border-4 border-[#9B292C] rounded-2xl px-8 py-4">
-                            <h2 className="text-3xl md:text-5xl font-black text-[#9B292C] uppercase tracking-tight">
-                                Envíos a Domicilio
-                            </h2>
-                        </div>
+                    <div className="mb-8">
+                        <h2 className="text-2xl md:text-3xl font-black text-[#9B292C] uppercase tracking-wider">
+                            Domicilio
+                        </h2>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">

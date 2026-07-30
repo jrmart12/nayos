@@ -64,6 +64,14 @@ h6 {
   background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
 }
 
+.checkered-strip {
+  height: 60px;
+  width: 100%;
+  background-image: conic-gradient(#9B292C 25%, transparent 25% 50%, #9B292C 50% 75%, transparent 75%);
+  background-size: 40px 40px;
+  background-position: 0 0;
+}
+
 .checkered-corner-tl {
   position: absolute;
   top: 0;
