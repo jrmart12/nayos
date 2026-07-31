@@ -6,7 +6,7 @@ import Footer from '@/components/Footer'
 import MenuProducts from '@/components/MenuProducts'
 import CheckeredPattern from '@/components/CheckeredPattern'
 
-export const revalidate = 60
+export const revalidate = false // Static; regenerated on-demand via /api/revalidate (Sanity webhook)
 
 export const metadata: Metadata = {
     title: "Menú",

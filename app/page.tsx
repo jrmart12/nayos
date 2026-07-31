@@ -10,7 +10,7 @@ import Footer from '@/components/Footer'
 import DeliverySection from '@/components/DeliverySection'
 import FadeInUp from '@/components/animations/FadeInUp'
 
-export const revalidate = 60
+export const revalidate = false // Static; regenerated on-demand via /api/revalidate (Sanity webhook)
 
 
 

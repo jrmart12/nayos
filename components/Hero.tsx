@@ -22,7 +22,7 @@ export default function Hero({ data }: HeroProps) {
     const primaryBtnLink = data?.primaryButtonLink || "/menu";
 
     return (
-        <section className="relative bg-transparent overflow-hidden pb-6">
+        <section className="relative bg-transparent overflow-hidden pb-6" style={{ WebkitTransform: "translate3d(0,0,0)", transform: "translate3d(0,0,0)" }}>
             <div
                 className="absolute inset-0 -z-10"
                 style={{
@@ -30,6 +30,8 @@ export default function Hero({ data }: HeroProps) {
                     backgroundImage:
                         "linear-gradient(#FDF0E0 1px, transparent 1px), linear-gradient(90deg, #FDF0E0 1px, transparent 1px)",
                     backgroundSize: "35px 35px",
+                    WebkitTransform: "translate3d(0,0,0)",
+                    transform: "translate3d(0,0,0)",
                 }}
             />
             <div className="container relative z-10">
@@ -51,7 +53,7 @@ export default function Hero({ data }: HeroProps) {
                         />
 
                         {/* Best in La Ceiba badge */}
-                        <div className="absolute top-3 left-3 md:top-36 md:left-28 z-20 w-24 md:w-80">
+                        <div className="absolute top-3 left-3 md:top-36 md:left-28 z-20 w-52 md:w-80">
                             <Image
                                 src="/brand/best.svg"
                                 alt="Best in La Ceiba"
@@ -62,8 +64,8 @@ export default function Hero({ data }: HeroProps) {
                         </div>
 
                         {/* Floating content card (top-right) */}
-                        <div className="absolute top-32 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:top-26 md:right-26 z-20">
-                            <div className="bg-[#FFF8F0]/95 backdrop-blur-sm rounded-2xl shadow-2xl px-5 py-10 md:px-7 md:py-6 w-[80vw] max-w-[460px]  md:w-[340px] text-center">
+                        <div className="absolute top-52 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:top-26 md:right-26 z-20">
+                            <div className="bg-[#FFF8F0]/95 backdrop-blur-sm rounded-2xl shadow-2xl px-1 py-5 md:px-7 md:py-6 w-[55vw] max-w-[360px] md:w-[340px] text-center">
 
                                 <div className="relative w-44 h-8 mb-2 mx-auto md:w-44 md:h-14 md:mb-4">
                                     <Image

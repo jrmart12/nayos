@@ -76,7 +76,7 @@ interface ProductPageProps {
     }
 }
 
-export const revalidate = 60
+export const revalidate = false // Static; regenerated on-demand via /api/revalidate (Sanity webhook)
 
 export async function generateStaticParams() {
     const products = await client.fetch(`*[_type == "product"]{ slug }`)

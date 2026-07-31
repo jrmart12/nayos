@@ -70,7 +70,7 @@ interface ProductPageProps {
     }
 }
 
-export const revalidate = 60 // Revalidate every 60 seconds
+export const revalidate = false // Static; regenerated on-demand via /api/revalidate (Sanity webhook)
 
 // Generate static params for all products
 export async function generateStaticParams() {
