@@ -22,18 +22,7 @@ export default function Hero({ data }: HeroProps) {
     const primaryBtnLink = data?.primaryButtonLink || "/menu";
 
     return (
-        <section className="relative bg-transparent overflow-hidden pb-6" style={{ WebkitTransform: "translate3d(0,0,0)", transform: "translate3d(0,0,0)" }}>
-            <div
-                className="absolute inset-0 -z-10"
-                style={{
-                    backgroundColor: "#FFF8F0",
-                    backgroundImage:
-                        "linear-gradient(#FDF0E0 1px, transparent 1px), linear-gradient(90deg, #FDF0E0 1px, transparent 1px)",
-                    backgroundSize: "35px 35px",
-                    WebkitTransform: "translate3d(0,0,0)",
-                    transform: "translate3d(0,0,0)",
-                }}
-            />
+        <section className="relative bg-transparent overflow-hidden">
             <div className="container relative z-10">
                 <div className="max-w-7xl ">
                     {/* Horizontal Banner */}
