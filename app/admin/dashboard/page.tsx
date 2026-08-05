@@ -109,6 +109,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<'orders' | 'analytics'>('orders');
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [productSort, setProductSort] = useState<'revenue' | 'units'>('revenue');
   const monthOptions = getMonthOptions();
 
   const fetchOrders = useCallback(async () => {
@@ -202,6 +203,34 @@ export default function DashboardPage() {
     Ingresos: Math.round(data.revenue),
     color: DELIVERY_COLORS[method] || '#6b7280',
   }));
+
+  // Sales by product (aggregated from order items)
+  const productMap: Record<string, { name: string; units: number; revenue: number; orders: number; variants: Set<string> }> = {};
+  orders.forEach(o => {
+    const seen = new Set<string>();
+    (o.items || []).forEach(item => {
+      const name = item.name || 'Sin nombre';
+      if (!productMap[name]) {
+        productMap[name] = { name, units: 0, revenue: 0, orders: 0, variants: new Set() };
+      }
+      const entry = productMap[name];
+      entry.units += item.quantity || 0;
+      entry.revenue += (item.price || 0) * (item.quantity || 0);
+      if (item.cutWeight) entry.variants.add(item.cutWeight);
+      if (!seen.has(name)) {
+        entry.orders += 1;
+        seen.add(name);
+      }
+    });
+  });
+  const productStats = Object.values(productMap).sort((a, b) =>
+    productSort === 'revenue' ? b.revenue - a.revenue : b.units - a.units
+  );
+  const productRevenueTotal = productStats.reduce((sum, p) => sum + p.revenue, 0);
+  const productUnitsTotal = productStats.reduce((sum, p) => sum + p.units, 0);
+  const productMax = productStats.length
+    ? Math.max(...productStats.map(p => (productSort === 'revenue' ? p.revenue : p.units)))
+    : 0;
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
@@ -431,6 +460,92 @@ export default function DashboardPage() {
                           <p className="text-orange-400 font-bold text-sm mt-2">{formatLps(item.Ingresos)}</p>
                         </div>
                       ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Sales by Product */}
+                <div className="bg-gray-900 rounded-2xl border border-gray-800">
+                  <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-gray-800">
+                    <div>
+                      <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider">
+                        Ventas por Producto
+                      </h2>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {productUnitsTotal} unidades · {formatLps(productRevenueTotal)} en productos
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1 bg-gray-800 rounded-lg p-1">
+                      <button
+                        onClick={() => setProductSort('revenue')}
+                        className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
+                          productSort === 'revenue' ? 'bg-orange-500 text-white' : 'text-gray-400 hover:text-white'
+                        }`}
+                      >
+                        Por dinero
+                      </button>
+                      <button
+                        onClick={() => setProductSort('units')}
+                        className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
+                          productSort === 'units' ? 'bg-orange-500 text-white' : 'text-gray-400 hover:text-white'
+                        }`}
+                      >
+                        Por unidades
+                      </button>
+                    </div>
+                  </div>
+
+                  {productStats.length === 0 ? (
+                    <div className="flex items-center justify-center h-32 text-gray-500 text-sm">
+                      No hay productos vendidos en este período
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-gray-800">
+                            <th className="text-left px-5 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Producto</th>
+                            <th className="text-left px-5 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider hidden md:table-cell w-[30%]">Participación</th>
+                            <th className="text-right px-5 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Unidades</th>
+                            <th className="text-right px-5 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-800">
+                          {productStats.map((p, i) => {
+                            const metric = productSort === 'revenue' ? p.revenue : p.units;
+                            const share = productRevenueTotal > 0 ? (p.revenue / productRevenueTotal) * 100 : 0;
+                            return (
+                              <tr key={p.name} className="hover:bg-gray-800/40 transition-colors">
+                                <td className="px-5 py-4">
+                                  <div className="flex items-start gap-3">
+                                    <span className="text-xs font-bold text-gray-500 w-5 shrink-0 pt-0.5">{i + 1}</span>
+                                    <div className="min-w-0">
+                                      <p className="text-white font-semibold">{p.name}</p>
+                                      <p className="text-gray-500 text-xs">
+                                        {p.orders} {p.orders === 1 ? 'pedido' : 'pedidos'}
+                                        {p.variants.size > 0 && ` · ${Array.from(p.variants).join(', ')}`}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-5 py-4 hidden md:table-cell">
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex-1 h-2 bg-orange-500/15 rounded-full overflow-hidden">
+                                      <div
+                                        className="h-full bg-orange-500 rounded-full transition-all"
+                                        style={{ width: `${productMax > 0 ? Math.round((metric / productMax) * 100) : 0}%` }}
+                                      />
+                                    </div>
+                                    <span className="text-xs text-gray-400 shrink-0 w-10 text-right">{share.toFixed(1)}%</span>
+                                  </div>
+                                </td>
+                                <td className="px-5 py-4 text-right font-bold text-white whitespace-nowrap">{p.units}</td>
+                                <td className="px-5 py-4 text-right font-bold text-orange-400 whitespace-nowrap">{formatLps(p.revenue)}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
                     </div>
                   )}
                 </div>
